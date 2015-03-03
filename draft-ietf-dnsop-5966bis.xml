@@ -160,8 +160,12 @@ If this element is not present, the default is "Network Working Group",
     keywords will be used for the search engine. -->
 
     <abstract>
-      <t>This document updates the requirements for the support of TCP as a
-        transport protocol for DNS implementations.</t>
+      <t>
+	This document specifies the requirement for support of TCP as a
+        transport protocol for DNS implementations and provides
+        guidelines towards DNS-over-TCP performance on par with that
+        of DNS-over-UDP.
+      </t>
     </abstract>
   </front>
 
@@ -194,11 +198,11 @@ If this element is not present, the default is "Network Working Group",
         support for TCP is henceforth a REQUIRED part of a full DNS protocol implementation.
       </t>
       <t>
-        There are several advantages and disadvantages to the increased use of 
-        TCP as well as implementation 
+        There are several advantages and disadvantages to the increased use of
+        TCP as well as implementation
         details that need to be considered. This document addresses these
-        issues and updates <xref target="RFC5966"/>, with
-        additional considerations and lessons learned from new research and 
+        issues and therefore extends the content of <xref target="RFC5966"/>, with
+        additional considerations and lessons learned from new research and
         implementations <xref target="Connection-Oriented-DNS"/>.
       </t>
       <t>
@@ -302,14 +306,12 @@ If this element is not present, the default is "Network Working Group",
       </t>
 
       <t>
-        This requirement is hereby relaxed.  A resolver MAY elect to send
-        either TCP or UDP queries depending on local operational reasons. If it 
-        already has an open TCP connection to the server it SHOULD reuse this
-        connection.
+        This requirement is hereby relaxed. A resolver MAY elect to send 
+        either TCP or UDP queries depending on local operational reasons. TCP 
+        MAY be used before sending any UDP queries. If it already has an 
+        open TCP connection to the server it SHOULD reuse this connection. 
+        In essence, TCP SHOULD be considered as valid a transport as UDP.
       </t>
-      <t>
-        In essence, TCP SHOULD be considered as valid a transport as UDP. It 
-        SHOULD NOT be used only for zone transfers and as a fallback.</t> 
       <t>
         In addition it is noted that all Recursive and Authoritative servers 
         MUST send responses using the same transport as the query arrived on. In
