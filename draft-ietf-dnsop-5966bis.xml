@@ -390,8 +390,9 @@ If this element is not present, the default is "Network Working Group",
       </t>
       
       <t>
-        In order to allow for efficient connection re-use, implementations MUST NOT send the
-        TCP framing 2 byte length field in a separate packet to the DNS message.
+        For reasons of efficiency, implementations SHOULD wherever possible 
+        attempt to coalesce the two byte length field and subsequent DNS payload
+        data into a single packet.
       </t>
       
       <t>
