@@ -112,6 +112,7 @@ please see http://xml.resource.org/authoring/README.html. -->
           <city>Reston</city>
           <region>VA</region>
           <code>20190</code>
+          <country>US</country>
         </postal>
         <phone>+1 703 948-3200</phone>
         <email>amankin@verisign.com</email>
@@ -125,6 +126,7 @@ please see http://xml.resource.org/authoring/README.html. -->
           <city>Reston</city>
           <region>VA</region>
           <code>20190</code>
+          <country>US</country>
         </postal>
         <phone>+1 703 948-3200</phone>
         <email>dwessels@verisign.com</email>
@@ -470,6 +472,9 @@ If this element is not present, the default is "Network Working Group",
     </section>
     <section title="TCP Fast Open" anchor="fastopen">
       <t>
+        This section is non-normative.
+      </t>
+      <t>
         TCP fastopen <xref target="RFC7413"></xref> (TFO) allows data
         to be carried in the SYN packet. It also saves up to one RTT compared to
         standard TCP.
@@ -565,9 +570,9 @@ If this element is not present, the default is "Network Working Group",
     &RFC5358;
     &RFC4786;
     &RFC7230;
-    &RFC7413;
     </references>
     <references title="Informative References">
+      &RFC7413;
       &RFC6824;
       <reference anchor="CPNI-TCP"
                  target="http://www.cpni.gov.uk/Docs/tn-03-09-security-assessment-TCP.pdf">
