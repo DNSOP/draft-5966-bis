@@ -65,7 +65,7 @@ please see http://xml.resource.org/authoring/README.html. -->
         <title abbrev="DNS over TCP">DNS Transport over TCP - Implementation Requirements</title>
         <!-- add 'role="editor"' below for the editors if appropriate -->
         <!-- Another author who claims to be an editor -->
-        <author fullname="John Dickinson" initials="J.A." surname="Dickinson">
+        <author fullname="John Dickinson" initials="J." surname="Dickinson">
             <organization abbrev="Sinodun">Sinodun Internet Technologies</organization>
             <address>
                 <postal>
@@ -80,7 +80,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 <uri>http://sinodun.com</uri>
             </address>
         </author>
-        <author fullname="Sara Dickinson" initials="S.A." surname="Dickinson">
+        <author fullname="Sara Dickinson" initials="S." surname="Dickinson">
             <organization abbrev="Sinodun">Sinodun Internet Technologies</organization>
             <address>
                 <postal>
@@ -95,7 +95,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 <uri>http://sinodun.com</uri>
             </address>
         </author>
-        <author fullname="Ray Bellis" initials="R.P." surname="Bellis">
+        <author fullname="Ray Bellis" initials="R." surname="Bellis">
             <organization abbrev="ISC">Internet Systems Consortium, Inc</organization>
             <address>
             <postal>
@@ -272,7 +272,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 packet fragmentation, which has been found to be unreliable in many circumstances.
                 Many firewalls routinely block fragmented IP packets, and some do not implement the
                 algorithms necessary to reassemble fragmented packets. Worse still, some network
-                devices deliberately refuse to handle DNS packets containing EDNS0. Other
+                devices deliberately refuse to handle DNS packets containing EDNS0 options. Other
                 issues relating to UDP transport and packet size are discussed in
                 <xref target="RFC5625"/>.</t>
 
@@ -315,13 +315,13 @@ please see http://xml.resource.org/authoring/README.html. -->
         <section title="Connection Handling" anchor="connections">
 
             <section title="Current practice" anchor="current">
-                <t> Section 4.2.2 of <xref target="RFC1035"/> says:
+                <t> Section 4.2.2 of <xref target="RFC1035"/> says:<vspace/>
                     <list style="symbols">
-                        <t><vspace/> The server should assume that the client will
+                        <t>The server should assume that the client will
                             initiate connection closing, and should delay closing its end of the
                             connection until all outstanding client requests have been
                             satisfied.</t>
-                        <t><vspace/> If the server needs to close a dormant connection to reclaim
+                        <t>If the server needs to close a dormant connection to reclaim
                            resources, it should wait until the connection has been idle for a period
                            on the order of two minutes. In particular, the server should allow the
                            SOA and AXFR request sequence (which begins a refresh operation) to be
