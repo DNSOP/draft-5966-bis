@@ -354,13 +354,14 @@ please see http://xml.resource.org/authoring/README.html. -->
                         a small number of TCP connections. They also offer little by the way of TCP
                         connection management options. The disadvantages of this include:
                         <list style="symbols">
-                            <t> Operational experience has shown that long server timeouts can 
-                                easily cause resource exhaustion and poor response under heavy 
+                            <t> Operational experience has shown that long server timeouts can
+                                easily cause resource exhaustion and poor response under heavy
                                 load.</t>
                             <t> Intentionally opening many connections and leaving them idle can
+                                trivially create a "denial-of-service” attack as many DNS servers
                                 are poorly equipped to defend against this by modifying their idle
                                 timeouts or other connection management policies. </t>
-                            <t> A modest number of clients that all concurrently attempted to
+                            <t> A modest number of clients that all concurrently attempt to
                                 use persistent connections with non-zero idle timeouts to such a
                                 server could unintentionally cause the same "denial-of-service"
                                 problem.</t></list></t>
@@ -408,10 +409,10 @@ please see http://xml.resource.org/authoring/README.html. -->
                     </section>
                 </section>
 
-                <section title="Concurrency" anchor="concurrency">
+                <section title="Concurrent connections" anchor="concurrency">
                     <t> To mitigate the risk of unintentional server overload, DNS clients MUST take
                         care to minimize the number of concurrent TCP connections made to any
-                        individual server. It is RECOMMENDED that for any given client - server
+                        individual server. It is RECOMMENDED that for any given client/server
                         interaction there SHOULD be no more than one connection for regular queries,
                         one for zone transfers and one for each protocol that is being used on top
                         of TCP, for example, if the resolver was using TLS.</t>
@@ -428,7 +429,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                     <t> To mitigate the risk of unintentional server overload, DNS clients MUST take
                         care to minimize the idle time of DNS-over-TCP sessions made to any
                         individual server. It is RECOMMENDED that DNS clients should close the TCP
-                        connection of an idle  sessions, unless an idle timeout has been established
+                        connection of an idle session, unless an idle timeout has been established
                         using some other signalling mechanism. </t>
 
                     <t> QUESTION: Should this RECOMMENDED? Should we add "an idle session
@@ -487,15 +488,15 @@ please see http://xml.resource.org/authoring/README.html. -->
                 queries but do not support out-of-order response. Therefore the recommendation for
                 servers to send out-of-order responses should not adversely affected by existing
                 client population. However, there was a discussion on the list that OOOP should be
-                governed by new signalling in the same way as idleness, otherwise the MUST in the 
+                governed by new signalling in the same way as idleness, otherwise the MUST in the
                 next sentence is not backwards compatible.</t>
 
             <t> For the avoidance of future doubt, this requirement is clarified
                 Authoritative servers and recursive resolvers are RECOMMENDED to support the sending
                 of responses in parallel and/or out-of-order, regardless of the transport protocol
-                in use. Stub and recursive resolvers that queries over TCP MUST be able to process
+                in use. Stub and recursive resolvers MUST be able to process
                 responses that arrive in a different order to that in which the requests were
-                sent.</t>
+                sent, regardless of the transport protocol in use.</t>
 
             <t> In order to achieve performance on par with UDP, recursive
                 resolvers SHOULD process TCP queries in parallel and return
@@ -510,12 +511,12 @@ please see http://xml.resource.org/authoring/README.html. -->
         </section>
 
         <section title="TCP Message Length Field" anchor="messagelength">
-            <t> Some DNS servers are sensitive to timeout conditions, and
-                will abort a TCP session if the first TCP window does not contain both the
-                two-octet length field and the entire request message described by that length
-                field. For this reason, and for reasons of efficiency, DNS clients and servers
-                SHOULD therefore transmit the two-octet length field, and the message described
-                by that length field, in a single TCP window. </t>
+            <t> For reasons of efficiency, DNS clients and servers
+                SHOULD transmit the two-octet length field, and the message described
+                by that length field, in a single TCP window. This additionally avoids problems due
+                to some DNS servers being very sensitive to timeout conditions on receiving messages 
+                (they may abort a TCP session if the first TCP window does not contain both
+                the length field and the entire message).</t>
         </section>
 
         <section title="TCP Fast Open" anchor="fastopen">
@@ -556,14 +557,17 @@ please see http://xml.resource.org/authoring/README.html. -->
                 techniques for the mitigation of DoS attacks at the network level have improved
                 substantially since DNS was first designed.</t>
 
-            <t> To mitigate the risk of DoS attacks, DNS servers should
-                provide configurable connection management options, for example:
+            <t> To mitigate the risk of DoS attacks, DNS servers should engage in TCP connection
+                management. This may include maintaining state on existing connections,
+                re-using existing connections and controlling request queues to enable fair use.
+                It is likely to be advantageous to provide configurable connection management 
+                options, for example:
                 <list style="symbols">
-                    <t> total number of TCP connections </t>
-                    <t> number of TCP connections per IP address</t>
-                    <t> server idle timeout </t><t> total number of DNS transactions per TCP
-                        connection</t>
-                        <t> maximum TCP connection duration</t></list>
+                    <t> total number of TCP connections</t>
+                    <t> maximum TCP connections per source IP address</t>
+                    <t> TCP connection idle timeout </t>
+                    <t> maximum DNS transactions per TCP connection</t>
+                    <t> maximum TCP connection duration</t></list>
                 No specific values are recommended for these parameters.
             </t>
 

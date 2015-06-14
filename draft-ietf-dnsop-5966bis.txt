@@ -6,11 +6,11 @@ dnsop                                                       J. Dickinson
 Internet-Draft                                              S. Dickinson
 Obsoletes: 5966 (if approved)                                    Sinodun
 Intended status: Standards Track                               R. Bellis
-Expires: December 7, 2015                                            ISC
+Expires: December 16, 2015                                           ISC
                                                                A. Mankin
                                                               D. Wessels
                                                            Verisign Labs
-                                                            June 5, 2015
+                                                           June 14, 2015
 
 
           DNS Transport over TCP - Implementation Requirements
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 7, 2015.
+   This Internet-Draft will expire on December 16, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Dickinson, et al.       Expires December 7, 2015                [Page 1]
+Dickinson, et al.       Expires December 16, 2015               [Page 1]
 
 Internet-Draft                DNS over TCP                     June 2015
 
@@ -76,7 +76,7 @@ Table of Contents
      6.2.  Recommendation  . . . . . . . . . . . . . . . . . . . . .   7
        6.2.1.  Connection Re-use . . . . . . . . . . . . . . . . . .   7
          6.2.1.1.  Query Pipelining  . . . . . . . . . . . . . . . .   8
-       6.2.2.  Concurrency . . . . . . . . . . . . . . . . . . . . .   8
+       6.2.2.  Concurrent connections  . . . . . . . . . . . . . . .   8
        6.2.3.  Idle Timeouts . . . . . . . . . . . . . . . . . . . .   9
        6.2.4.  Tear Down . . . . . . . . . . . . . . . . . . . . . .   9
    7.  Response Reordering . . . . . . . . . . . . . . . . . . . . .  10
@@ -91,7 +91,7 @@ Table of Contents
    Appendix A.  Summary of Advantages and Disadvantages to using TCP
                 for DNS  . . . . . . . . . . . . . . . . . . . . . .  14
    Appendix B.  Changes -01 to -02 . . . . . . . . . . . . . . . . .  14
-   Appendix C.  Changes -00 to -01 . . . . . . . . . . . . . . . . .  14
+   Appendix C.  Changes -00 to -01 . . . . . . . . . . . . . . . . .  15
    Appendix D.  Changes to RFC 5966  . . . . . . . . . . . . . . . .  15
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Dickinson, et al.       Expires December 7, 2015                [Page 2]
+Dickinson, et al.       Expires December 16, 2015               [Page 2]
 
 Internet-Draft                DNS over TCP                     June 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                DNS over TCP                     June 2015
 
 
 
-Dickinson, et al.       Expires December 7, 2015                [Page 3]
+Dickinson, et al.       Expires December 16, 2015               [Page 3]
 
 Internet-Draft                DNS over TCP                     June 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                DNS over TCP                     June 2015
 
 
 
-Dickinson, et al.       Expires December 7, 2015                [Page 4]
+Dickinson, et al.       Expires December 16, 2015               [Page 4]
 
 Internet-Draft                DNS over TCP                     June 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                DNS over TCP                     June 2015
 
 
 
-Dickinson, et al.       Expires December 7, 2015                [Page 5]
+Dickinson, et al.       Expires December 16, 2015               [Page 5]
 
 Internet-Draft                DNS over TCP                     June 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                DNS over TCP                     June 2015
 
 
 
-Dickinson, et al.       Expires December 7, 2015                [Page 6]
+Dickinson, et al.       Expires December 16, 2015               [Page 6]
 
 Internet-Draft                DNS over TCP                     June 2015
 
@@ -354,10 +354,11 @@ Internet-Draft                DNS over TCP                     June 2015
       load.
 
    o  Intentionally opening many connections and leaving them idle can
+      trivially create a "denial-of-service" attack as many DNS servers
       are poorly equipped to defend against this by modifying their idle
       timeouts or other connection management policies.
 
-   o  A modest number of clients that all concurrently attempted to use
+   o  A modest number of clients that all concurrently attempt to use
       persistent connections with non-zero idle timeouts to such a
       server could unintentionally cause the same "denial-of-service"
       problem.
@@ -381,23 +382,18 @@ Internet-Draft                DNS over TCP                     June 2015
    by sending multiple queries and responses over a single persistent
    TCP connection.
 
-
-
-
-
-
-
-
-
-Dickinson, et al.       Expires December 7, 2015                [Page 7]
-
-Internet-Draft                DNS over TCP                     June 2015
-
-
    When sending multiple queries over a TCP connection implementations
    MUST take care to check their list of outstanding DNS Message ID's
    before sending a new query over an existing TCP connection.  They
    MUST not re-use the DNS Message ID of an in-flight query.  This is
+
+
+
+Dickinson, et al.       Expires December 16, 2015               [Page 7]
+
+Internet-Draft                DNS over TCP                     June 2015
+
+
    especially important if the server could be performing out-of-order
    processing (see section XX).
 
@@ -424,15 +420,15 @@ Internet-Draft                DNS over TCP                     June 2015
    it would for UDP.  The handling of responses to pipelined queries is
    covered in section YY.
 
-6.2.2.  Concurrency
+6.2.2.  Concurrent connections
 
    To mitigate the risk of unintentional server overload, DNS clients
    MUST take care to minimize the number of concurrent TCP connections
    made to any individual server.  It is RECOMMENDED that for any given
-   client - server interaction there SHOULD be no more than one
-   connection for regular queries, one for zone transfers and one for
-   each protocol that is being used on top of TCP, for example, if the
-   resolver was using TLS.
+   client/server interaction there SHOULD be no more than one connection
+   for regular queries, one for zone transfers and one for each protocol
+   that is being used on top of TCP, for example, if the resolver was
+   using TLS.
 
    Similarly, servers MAY impose limits on the number of concurrent TCP
    connections being handled for any particular client.  These limits
@@ -445,7 +441,11 @@ Internet-Draft                DNS over TCP                     June 2015
 
 
 
-Dickinson, et al.       Expires December 7, 2015                [Page 8]
+
+
+
+
+Dickinson, et al.       Expires December 16, 2015               [Page 8]
 
 Internet-Draft                DNS over TCP                     June 2015
 
@@ -455,7 +455,7 @@ Internet-Draft                DNS over TCP                     June 2015
    To mitigate the risk of unintentional server overload, DNS clients
    MUST take care to minimize the idle time of DNS-over-TCP sessions
    made to any individual server.  It is RECOMMENDED that DNS clients
-   should close the TCP connection of an idle sessions, unless an idle
+   should close the TCP connection of an idle session, unless an idle
    timeout has been established using some other signalling mechanism.
 
    QUESTION: Should this RECOMMENDED?  Should we add "an idle session
@@ -501,7 +501,7 @@ Internet-Draft                DNS over TCP                     June 2015
 
 
 
-Dickinson, et al.       Expires December 7, 2015                [Page 9]
+Dickinson, et al.       Expires December 16, 2015               [Page 9]
 
 Internet-Draft                DNS over TCP                     June 2015
 
@@ -529,9 +529,9 @@ Internet-Draft                DNS over TCP                     June 2015
    Authoritative servers and recursive resolvers are RECOMMENDED to
    support the sending of responses in parallel and/or out-of-order,
    regardless of the transport protocol in use.  Stub and recursive
-   resolvers that queries over TCP MUST be able to process responses
-   that arrive in a different order to that in which the requests were
-   sent.
+   resolvers MUST be able to process responses that arrive in a
+   different order to that in which the requests were sent, regardless
+   of the transport protocol in use.
 
    In order to achieve performance on par with UDP, recursive resolvers
    SHOULD process TCP queries in parallel and return individual
@@ -546,18 +546,18 @@ Internet-Draft                DNS over TCP                     June 2015
 
 8.  TCP Message Length Field
 
-   Some DNS servers are sensitive to timeout conditions, and will abort
-   a TCP session if the first TCP window does not contain both the two-
-   octet length field and the entire request message described by that
-   length field.  For this reason, and for reasons of efficiency, DNS
-   clients and servers SHOULD therefore transmit the two-octet length
-   field, and the message described by that length field, in a single
-   TCP window.
+   For reasons of efficiency, DNS clients and servers SHOULD transmit
+   the two-octet length field, and the message described by that length
+   field, in a single TCP window.  This additionally avoids problems due
+   to some DNS servers being very sensitive to timeout conditions on
+   receiving messages (they may abort a TCP session if the first TCP
+   window does not contain both the length field and the entire
+   message).
 
 
 
 
-Dickinson, et al.       Expires December 7, 2015               [Page 10]
+Dickinson, et al.       Expires December 16, 2015              [Page 10]
 
 Internet-Draft                DNS over TCP                     June 2015
 
@@ -605,24 +605,26 @@ Internet-Draft                DNS over TCP                     June 2015
    servers, techniques for the mitigation of DoS attacks at the network
    level have improved substantially since DNS was first designed.
 
-   To mitigate the risk of DoS attacks, DNS servers should provide
-   configurable connection management options, for example:
+   To mitigate the risk of DoS attacks, DNS servers should engage in TCP
+   connection management.  This may include maintaining state on
+   existing connections, re-using existing connections and controlling
+   request queues to enable fair use.  It is likely to be advantageous
+   to provide configurable connection management options, for example:
 
-   o  total number of TCP connections
 
 
-
-
-Dickinson, et al.       Expires December 7, 2015               [Page 11]
+Dickinson, et al.       Expires December 16, 2015              [Page 11]
 
 Internet-Draft                DNS over TCP                     June 2015
 
 
-   o  number of TCP connections per IP address
+   o  total number of TCP connections
 
-   o  server idle timeout
+   o  maximum TCP connections per source IP address
 
-   o  total number of DNS transactions per TCP connection
+   o  TCP connection idle timeout
+
+   o  maximum DNS transactions per TCP connection
 
    o  maximum TCP connection duration
 
@@ -663,16 +665,17 @@ Internet-Draft                DNS over TCP                     June 2015
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
               specification", STD 13, RFC 1035, November 1987.
 
-   [RFC1123]  Braden, R., "Requirements for Internet Hosts - Application
-              and Support", STD 3, RFC 1123, October 1989.
 
 
 
 
-Dickinson, et al.       Expires December 7, 2015               [Page 12]
+Dickinson, et al.       Expires December 16, 2015              [Page 12]
 
 Internet-Draft                DNS over TCP                     June 2015
 
+
+   [RFC1123]  Braden, R., "Requirements for Internet Hosts - Application
+              and Support", STD 3, RFC 1123, October 1989.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -718,17 +721,18 @@ Internet-Draft                DNS over TCP                     June 2015
               Privacy and Security (extended)", <http://www.isi.edu/
               publications/trpublic/files/tr-693.pdf>.
 
-   [RFC6824]  Ford, A., Raiciu, C., Handley, M., and O. Bonaventure,
-              "TCP Extensions for Multipath Operation with Multiple
-              Addresses", RFC 6824, January 2013.
 
 
 
 
-Dickinson, et al.       Expires December 7, 2015               [Page 13]
+Dickinson, et al.       Expires December 16, 2015              [Page 13]
 
 Internet-Draft                DNS over TCP                     June 2015
 
+
+   [RFC6824]  Ford, A., Raiciu, C., Handley, M., and O. Bonaventure,
+              "TCP Extensions for Multipath Operation with Multiple
+              Addresses", RFC 6824, January 2013.
 
    [RFC7413]  Cheng, Y., Chu, J., Radhakrishnan, S., and A. Jain, "TCP
               Fast Open", RFC 7413, December 2014.
@@ -774,17 +778,17 @@ Appendix A.  Summary of Advantages and Disadvantages to using TCP for
 
 Appendix B.  Changes -01 to -02
 
-   o  TODO: Update this.
-
-Appendix C.  Changes -00 to -01
 
 
 
-
-Dickinson, et al.       Expires December 7, 2015               [Page 14]
+Dickinson, et al.       Expires December 16, 2015              [Page 14]
 
 Internet-Draft                DNS over TCP                     June 2015
 
+
+   o  TODO: Update this.
+
+Appendix C.  Changes -00 to -01
 
    o  Changed updates to obsoletes RFC 5966.
 
@@ -825,6 +829,19 @@ Appendix D.  Changes to RFC 5966
 
 Authors' Addresses
 
+
+
+
+
+
+
+
+
+Dickinson, et al.       Expires December 16, 2015              [Page 15]
+
+Internet-Draft                DNS over TCP                     June 2015
+
+
    John Dickinson
    Sinodun Internet Technologies
    Magdalen Centre
@@ -834,12 +851,6 @@ Authors' Addresses
 
    Email: jad@sinodun.com
    URI:   http://sinodun.com
-
-
-
-Dickinson, et al.       Expires December 7, 2015               [Page 15]
-
-Internet-Draft                DNS over TCP                     June 2015
 
 
    Sara Dickinson
@@ -874,6 +885,19 @@ Internet-Draft                DNS over TCP                     June 2015
    Email: amankin@verisign.com
 
 
+
+
+
+
+
+
+
+
+Dickinson, et al.       Expires December 16, 2015              [Page 16]
+
+Internet-Draft                DNS over TCP                     June 2015
+
+
    Duane Wessels
    Verisign Labs
    12061 Bluemont Way
@@ -893,4 +917,36 @@ Internet-Draft                DNS over TCP                     June 2015
 
 
 
-Dickinson, et al.       Expires December 7, 2015               [Page 16]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Dickinson, et al.       Expires December 16, 2015              [Page 17]
