@@ -91,9 +91,9 @@ Table of Contents
    Appendix A.  Summary of Advantages and Disadvantages to using TCP
                 for DNS  . . . . . . . . . . . . . . . . . . . . . .  13
    Appendix B.  Changes -01 to -02 . . . . . . . . . . . . . . . . .  14
-   Appendix C.  Changes -00 to -01 . . . . . . . . . . . . . . . . .  14
+   Appendix C.  Changes -00 to -01 . . . . . . . . . . . . . . . . .  15
    Appendix D.  Changes to RFC 5966  . . . . . . . . . . . . . . . .  15
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
 
@@ -383,7 +383,7 @@ Internet-Draft                DNS over TCP                     June 2015
    before sending a new query over an existing TCP connection.  They
    MUST not re-use the DNS Message ID of an in-flight query.  This is
    especially important if the server could be performing out-of-order
-   processing (see section XX).
+   processing (see Section 7).
 
 
 
@@ -415,7 +415,7 @@ Internet-Draft                DNS over TCP                     June 2015
    DNS servers (especially recursive) SHOULD expect to receive pipelined
    queries.  The server should process TCP queries concurrently, just as
    it would for UDP.  The handling of responses to pipelined queries is
-   covered in section YY.
+   covered in Section 7.
 
 6.2.2.  Concurrent connections
 
@@ -764,7 +764,42 @@ Internet-Draft                DNS over TCP                     June 2015
 
 Appendix B.  Changes -01 to -02
 
-   o  TODO: Update this.
+   o  Added more text to Introduction as background to TCP use.
+
+   o  Added definitions of Persistent connection and Idle session to
+      Terminology section.
+
+   o  Separated Connection Handling section into Current Practice and
+      Recommendations.  Provide more detail on current practices and
+      divided Recommendations up into more granular sub-sections.
+
+   o  Add section on Idle time with new text on recommendations for
+      client idle behaviour.
+
+   o  Move TCP message field length discussion to separate section.
+
+
+
+
+Dickinson, et al.       Expires December 31, 2015              [Page 14]
+
+Internet-Draft                DNS over TCP                     June 2015
+
+
+   o  Removed references to system calls in TFO section.
+
+   o  Added more discussion on DoS mitigation in Security Considerations
+      section.
+
+   o  Added statement that servers MAY use 0 idle timeout.
+
+   o  Re-stated position of TCP as an alternative to UDP in Discussion.
+
+   o  Updated text on server limits on concurrent connections from a
+      particular client.
+
+   o  Added text that client retry logic is outside the scope of this
+      document.
 
 Appendix C.  Changes -00 to -01
 
@@ -775,16 +810,6 @@ Appendix C.  Changes -00 to -01
       to make the intention clearer and more consistent.
 
    o  Reference to TCP FASTOPEN updated now that it is an RFC.
-
-
-
-
-
-
-Dickinson, et al.       Expires December 31, 2015              [Page 14]
-
-Internet-Draft                DNS over TCP                     June 2015
-
 
    o  Added paragraph to say that implementations MUST NOT send the TCP
       framing 2 byte length field in a separate packet to the DNS
@@ -810,6 +835,13 @@ Appendix D.  Changes to RFC 5966
    2.  DNS implementations are recommended to support reuse of TCP
        connections
 
+
+
+Dickinson, et al.       Expires December 31, 2015              [Page 15]
+
+Internet-Draft                DNS over TCP                     June 2015
+
+
    3.  DNS implementations are recommended to support pipelining and out
        of order processing of the query stream
 
@@ -826,20 +858,6 @@ Authors' Addresses
 
    Email: jad@sinodun.com
    URI:   http://sinodun.com
-
-
-
-
-
-
-
-
-
-
-
-Dickinson, et al.       Expires December 31, 2015              [Page 15]
-
-Internet-Draft                DNS over TCP                     June 2015
 
 
    Sara Dickinson
@@ -874,6 +892,12 @@ Internet-Draft                DNS over TCP                     June 2015
    Email: amankin@verisign.com
 
 
+
+Dickinson, et al.       Expires December 31, 2015              [Page 16]
+
+Internet-Draft                DNS over TCP                     June 2015
+
+
    Duane Wessels
    Verisign Labs
    12061 Bluemont Way
@@ -893,4 +917,36 @@ Internet-Draft                DNS over TCP                     June 2015
 
 
 
-Dickinson, et al.       Expires December 31, 2015              [Page 16]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Dickinson, et al.       Expires December 31, 2015              [Page 17]

@@ -384,7 +384,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                         take care to check their list of outstanding DNS Message ID's before sending
                         a new query over an existing TCP connection. They MUST not re-use the DNS
                         Message ID of an in-flight query. This is especially important if the server
-                        could be performing out-of-order processing (see section XX).</t>
+                        could be performing out-of-order processing (see <xref target="re-ordering"/>).</t>
 
                     <section title="Query Pipelining" anchor="pipelining">
                         <t> Due to the use of TCP primarily for zone transfer and truncated
@@ -404,7 +404,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                         <t> DNS servers (especially recursive) SHOULD expect to receive
                             pipelined queries.  The server should process TCP queries concurrently,
                             just as it would for UDP.  The handling of responses to pipelined
-                            queries is covered in section YY.</t>
+                            queries is covered in <xref target="re-ordering"/>.</t>
                     </section>
                 </section>
 
@@ -704,7 +704,31 @@ please see http://xml.resource.org/authoring/README.html. -->
         <section title="Changes -01 to -02">
             <t>
                 <list style="symbols">
-                    <t> TODO: Update this.</t>
+                    <t> Added more text to Introduction as background to TCP use.</t>
+
+                    <t>Added definitions of Persistent connection and Idle session
+                        to Terminology section.</t>
+
+                    <t>Separated Connection Handling section into Current Practice and
+                        Recommendations. Provide more detail on current practices and 
+                        divided Recommendations up into more granular sub-sections.</t>
+
+                    <t>Add section on Idle time with new text on recommendations for 
+                        client idle behaviour.</t>
+
+                    <t>Move TCP message field length discussion to separate section.</t>
+
+                    <t>Removed references to system calls in TFO section.</t>
+
+                    <t>Added more discussion on DoS mitigation in Security Considerations section.</t>
+
+                    <t>Added statement that servers MAY use 0 idle timeout.</t>
+
+                    <t>Re-stated position of TCP as an alternative to UDP in Discussion. </t>
+                    
+                    <t>Updated text on server limits on concurrent connections from a particular client. </t>
+                    
+                    <t>Added text that client retry logic is outside the scope of this document.</t>
                 </list>
             </t>
         </section>
