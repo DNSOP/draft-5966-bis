@@ -171,9 +171,10 @@ please see http://xml.resource.org/authoring/README.html. -->
                 <xref target="RFC0768">UDP</xref>. <xref target="RFC0793">TCP</xref> is always used
                 for full zone transfers (AXFR) and is often used for messages whose sizes exceed the
                 DNS protocol's original 512-byte limit. The growing deployment of DNSSEC and IPv6
-                has increased response sizes and therefore the use of TCP (TODO: add reference).
-                Another strong motivation for TCP use is defending against reflection/amplification
-                attacks (for example with RRL) and cache poisoning (TODO: add references).</t>
+                has increased response sizes and therefore the use of TCP.
+                Another strong motivation for increased TCP use is defence against exploiting DNS for
+                reflection/amplification attacks, both as a result of the three-way handshake and
+                as an option in <xref target="RRL">Response Rate Limiting</xref>.</t>
 
             <t> Section 6.1.3.2 of <xref target="RFC1123"/> states:
                 <list><t><vspace/>DNS resolvers and recursive servers MUST support UDP, and SHOULD
@@ -185,11 +186,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <t> The majority of DNS server operators already support TCP and the default
                 configuration for most software implementations is to support TCP. The primary
-                audience for this document is those implementors whose failure to support TCP
-                restricts interoperability and limits deployment of new DNS features.</t>
-
-            <t> QUESTION: We are now going a lot further than this so maybe we should say "failure
-                to fully support"?</t>
+                audience for this document is those implementors whose limited support for TCP
+                restricts interoperability and hinders deployment of new DNS features.</t>
 
             <t> This document therefore updates the core DNS protocol specifications such that
                 support for TCP is henceforth a REQUIRED part of a full DNS protocol
@@ -358,14 +356,15 @@ please see http://xml.resource.org/authoring/README.html. -->
                                 easily cause resource exhaustion and poor response under heavy
                                 load.</t>
                             <t> Intentionally opening many connections and leaving them idle can
-                                trivially create a "denial-of-service” attack as many DNS servers
+                                trivially create a TCP "denial-of-service” attack as many DNS servers
                                 are poorly equipped to defend against this by modifying their idle
                                 timeouts or other connection management policies. </t>
                             <t> A modest number of clients that all concurrently attempt to
                                 use persistent connections with non-zero idle timeouts to such a
                                 server could unintentionally cause the same "denial-of-service"
                                 problem.</t></list></t>
-                    <t> Note that in these cases the "denial-of-service" effects not only clients
+                    <t> Note that this denial-of-service is only on the TCP service. However,
+                        in these cases it affects not only clients
                         wishing to use TCP for their queries for operational reasons, but all
                         clients who must fall back to TCP from UDP after receiving a TC=1 flag.</t>
                 </section>
@@ -428,18 +427,13 @@ please see http://xml.resource.org/authoring/README.html. -->
                 <section title="Idle Timeouts" anchor="idle">
                     <t> To mitigate the risk of unintentional server overload, DNS clients MUST take
                         care to minimize the idle time of DNS-over-TCP sessions made to any
-                        individual server. It is RECOMMENDED that DNS clients should close the TCP
+                        individual server. DNS clients SHOULD close the TCP
                         connection of an idle session, unless an idle timeout has been established
                         using some other signalling mechanism. </t>
 
-                    <t> QUESTION: Should this RECOMMENDED? Should we add "an idle session
-                        that will not be immediately re-used", or even add "A client MAY use a idle
-                        timeout of XX (order of ms or based on RTT of most recent response) if it
-                        has operational reasons for doing so.</t>
-
                     <t> To mitigate the risk of unintentional server overload
                         it is RECOMMENDED that the default server application-level idle period
-                        should be of the order of seconds, but no particular value is specified. In
+                        be of the order of seconds, but no particular value is specified. In
                         practice, the idle period may vary dynamically, and servers MAY allow idle
                         connections to remain open for longer periods as resources permit. A timeout
                         of at least a few seconds is advisable for normal operations
@@ -456,17 +450,9 @@ please see http://xml.resource.org/authoring/README.html. -->
                         under unusual conditions such as defending against an attack or system
                         failure/reboot.</t>
 
-                    <t> There is currently no guidance on what a client should do in the event of
-                        an unexpected closure by the server. The client could choose to re-try to
-                        the same server using TCP, use TCP to connect to a different server or
-                        switch to UDP.</t>
-
-                    <t> QUESTION: There was a request on the mailing list to address this issue, but
-                        not quite sure what to recommend.... Also
-                        <xref target="RFC7230">HTTP/1.1</xref> states: "A client that pipelines
-                        requests SHOULD retry unanswered requests if the connection closes before it
-                        receives all of the the corresponding responses." Should we include
-                        something similar?</t>
+                    <t> Clients SHOULD retry unanswered queries if the connection closes before 
+                        receiving all outstanding responses. No specific retry algorithm is specified
+                        in this document. </t>
 
                     <t> If a server finds that a client has closed a TCP session, or if the
                         session has been otherwise interrupted, before all pending responses
@@ -484,14 +470,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 servers, so resolvers should not depend on them being returned in order.
                 </t></list></t>
 
-            <t> QUESTION: There are no known client implementations that support pipelining of
-                queries but do not support out-of-order response. Therefore the recommendation for
-                servers to send out-of-order responses should not adversely affected by existing
-                client population. However, there was a discussion on the list that OOOP should be
-                governed by new signalling in the same way as idleness, otherwise the MUST in the
-                next sentence is not backwards compatible.</t>
-
-            <t> For the avoidance of future doubt, this requirement is clarified
+            <t> For the avoidance of future doubt, this requirement is clarified.
                 Authoritative servers and recursive resolvers are RECOMMENDED to support the sending
                 of responses in parallel and/or out-of-order, regardless of the transport protocol
                 in use. Stub and recursive resolvers MUST be able to process
@@ -513,9 +492,9 @@ please see http://xml.resource.org/authoring/README.html. -->
         <section title="TCP Message Length Field" anchor="messagelength">
             <t> For reasons of efficiency, DNS clients and servers
                 SHOULD transmit the two-octet length field, and the message described
-                by that length field, in a single TCP window. This additionally avoids problems due
+                by that length field, in a single TCP segment. This additionally avoids problems due
                 to some DNS servers being very sensitive to timeout conditions on receiving messages 
-                (they may abort a TCP session if the first TCP window does not contain both
+                (they may abort a TCP session if the first TCP segment does not contain both
                 the length field and the entire message).</t>
         </section>
 
@@ -557,6 +536,8 @@ please see http://xml.resource.org/authoring/README.html. -->
                 techniques for the mitigation of DoS attacks at the network level have improved
                 substantially since DNS was first designed.</t>
 
+            <t> Readers are advised to familiarise themselves with <xref target="CPNI-TCP"/>. </t>
+
             <t> To mitigate the risk of DoS attacks, DNS servers should engage in TCP connection
                 management. This may include maintaining state on existing connections,
                 re-using existing connections and controlling request queues to enable fair use.
@@ -571,7 +552,9 @@ please see http://xml.resource.org/authoring/README.html. -->
                 No specific values are recommended for these parameters.
             </t>
 
-            <t> Readers are advised to familiarise themselves with <xref target="CPNI-TCP"/>. </t>
+            <t>Operators are advised to familiarise themselves with the configuration and tuning
+                parameters available in the operating system TCP stack. However detailed advice on
+                this is outside the scope of this document.</t>
 
             <t> Operators of recursive servers should ensure that they only accept connections from
                 expected clients, and do not accept them from unknown sources. In the case of UDP
@@ -582,11 +565,11 @@ please see http://xml.resource.org/authoring/README.html. -->
 
         <section anchor="Acknowledgements" title="Acknowledgements">
             <t> The authors would like to thank Francis Dupont and Paul Vixie for detailed review,
-                and many other who contributed to the mailing list discussion. Also Liang Zhu, Zi
-                Hu, and John Heidemann for extensive DNS-over-TCP discussions and code and Lucie
+                Andrew Sullivan, Tony Finch, Stephane Bortzmeyer and the many others who contributed
+                to the mailing list discussion. Also Liang Zhu, Zi
+                Hu, and John Heidemann for extensive DNS-over-TCP discussions and code. Lucie
                 Guiraud and Danny McPherson for reviewing early versions of this document.
-                We would also like to thank all those who contributed to RFC 5966. TODO: Make sure
-                this is fully up to date.</t>
+                We would also like to thank all those who contributed to RFC 5966.</t>
         </section>
     </middle>
 
@@ -610,8 +593,32 @@ please see http://xml.resource.org/authoring/README.html. -->
         <references title="Informative References">
             &RFC7413;
             &RFC6824;
+	     <reference anchor="RRL">
+	        <front>
+	          <title>DNS Response Rate Limiting (DNS RRL)</title>
+
+	          <author initials="P." surname="Vixie" fullname="Paul Vixie">
+	            <organization>ISC</organization>
+	            <address>
+	              <email>vixie@isc.org</email>
+	            </address>
+	          </author>
+
+	          <author initials="V." surname="Schryver" fullname="Vernon Schryver">
+	            <organization>Rhyolite</organization>
+	            <address>
+	              <email>vjs@rhyolite.com</email>
+	            </address>
+	          </author>
+
+	          <date year="2012" month="April"/>
+	        </front>
+	        <seriesInfo name="ISC-TN" value="2012-1-Draft1"/>
+	        <format type="TXT" target="http://ss.vix.su/~vixie/isc-tn-2012-1.txt"/>
+	      </reference>
+
             <reference anchor="CPNI-TCP"
-                       target="http://www.cpni.gov.uk/Docs/tn-03-09-security-assessment-TCP.pdf">
+                       target="http://www.gont.com.ar/papers/tn-03-09-security-assessment-TCP.pdf">
                 <front>
                     <title>Security Assessment of the Transmission Control Protocol (TCP)</title>
                     <author>
@@ -633,6 +640,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                     <date month="May" year="2012"/>
                 </front>
             </reference>
+
             <reference anchor="Connection-Oriented-DNS"
             target="http://www.isi.edu/publications/trpublic/files/tr-693.pdf">
                 <front>
