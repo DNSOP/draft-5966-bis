@@ -172,9 +172,11 @@ please see http://xml.resource.org/authoring/README.html. -->
                 for full zone transfers (AXFR) and is often used for messages whose sizes exceed the
                 DNS protocol's original 512-byte limit. The growing deployment of DNSSEC and IPv6
                 has increased response sizes and therefore the use of TCP.
-                Another strong motivation for increased TCP use is defence against exploiting DNS for
-                reflection/amplification attacks, both as a result of the three-way handshake and
-                as an option in <xref target="RRL">Response Rate Limiting</xref>.</t>
+                The need for increased TCP use has also been driven by the 
+                protection it provides against address spoofing and therefore 
+                exploitation of DNS in reflection/amplification attacks.
+                It is now widely used in Response Rate Limiting [RRL]  
+                <xref target="RRL">Response Rate Limiting</xref>.</t>
 
             <t> Section 6.1.3.2 of <xref target="RFC1123"/> states:
                 <list><t><vspace/>DNS resolvers and recursive servers MUST support UDP, and SHOULD
@@ -221,8 +223,8 @@ please see http://xml.resource.org/authoring/README.html. -->
                     the first response. </t>
                 <t> Connection Reuse: the sending of multiple queries and responses
                     over a single TCP connection.</t>
-                <t> Idle DNS-over-TCP session: Application level idleness is viewed differently from
-                    the client and server perspective. A DNS client considers a DNS-over-TCP session
+                <t> Idle DNS-over-TCP session: Clients and servers view application level 
+                    idleness differently.  A DNS client considers a DNS-over-TCP session
                     to be idle when it has no pending queries to send and there are no outstanding
                     responses. A DNS server considers a DNS-over-TCP session to be idle when it has
                     sent responses to all the queries it has received on that connection.</t>
@@ -312,7 +314,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
         <section title="Connection Handling" anchor="connections">
 
-            <section title="Current practice" anchor="current">
+            <section title="Current practices" anchor="current">
                 <t> Section 4.2.2 of <xref target="RFC1035"/> says:<vspace/>
                     <list style="symbols">
                         <t>The server should assume that the client will
@@ -340,7 +342,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                     been proposed. </t>
 
                 <section title="Clients" anchor="currentclients">
-                    <t> As a result there is no clear guidance today in any RFC as to when a DNS
+                    <t> There is no clear guidance today in any RFC as to when a DNS
                         client should close a TCP connection, and there are no specific
                         recommendations with regard to DNS client idle timeouts. However it is
                         common practice for clients to close the TCP connection after sending a
@@ -370,7 +372,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 </section>
             </section>
 
-            <section title="Recommendation" anchor="recommedations">
+            <section title="Recommendations" anchor="recommedations">
                 <t> The following sections include recommendations that are intended to result in
                     more consistent and scalable implementations of DNS-over-TCP.</t>
 
@@ -380,14 +382,14 @@ please see http://xml.resource.org/authoring/README.html. -->
                         both clients and servers SHOULD support connection reuse by sending multiple
                         queries and responses over a single persistent TCP connection.</t>
 
-                    <t> When sending multiple queries over a TCP connection implementations MUST
-                        take care to check their list of outstanding DNS Message ID's before sending
-                        a new query over an existing TCP connection. They MUST not re-use the DNS
+                    <t> When sending multiple queries over a TCP connection clients MUST
+                        take care to avoid Message ID collisions. In other words, they
+                        MUST not re-use the DNS
                         Message ID of an in-flight query. This is especially important if the server
                         could be performing out-of-order processing (see <xref target="re-ordering"/>).</t>
 
                     <section title="Query Pipelining" anchor="pipelining">
-                        <t> Due to the use of TCP primarily for zone transfer and truncated
+                        <t> Due to the historical use of TCP primarily for zone transfer and truncated
                             responses, no existing RFC discusses the idea of pipelining DNS
                             queries over a TCP connection.</t>
 
@@ -403,8 +405,10 @@ please see http://xml.resource.org/authoring/README.html. -->
                             as input to server and transport selection algorithms.</t>
                         <t> DNS servers (especially recursive) SHOULD expect to receive
                             pipelined queries.  The server should process TCP queries concurrently,
-                            just as it would for UDP.  The handling of responses to pipelined
-                            queries is covered in <xref target="re-ordering"/>.</t>
+                            just as it would for UDP.  The server SHOULD answer all pipelined 
+                            queries, even if they are sent in quick succession. The handling of
+                            responses to pipelined queries is covered in 
+                            <xref target="re-ordering"/>.</t>
                     </section>
                 </section>
 
@@ -440,7 +444,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                         to support those clients that expect the SOA and AXFR request sequence to be
                         made on a single connection as originally specified in
                         <xref target="RFC1035"/>. Servers MAY use zero timeouts when experiencing
-                        heavy load such as an attack.</t>
+                        heavy load or are under attack.</t>
                 </section>
 
                 <section title="Tear Down" anchor="timeouts">
@@ -729,6 +733,9 @@ please see http://xml.resource.org/authoring/README.html. -->
                     <t>Updated text on server limits on concurrent connections from a particular client. </t>
                     
                     <t>Added text that client retry logic is outside the scope of this document.</t>
+                    
+                    <t>Clarified that servers should answer all pipelined queries even if sent very close together.</t>
+                    
                 </list>
             </t>
         </section>
