@@ -696,10 +696,9 @@ Internet-Draft                DNS over TCP                      Jun 2015
 
    [Connection-Oriented-DNS]
               Zhu, L., Hu, Z., Heidemann, J., Wessels, D., Mankin, A.,
-              and N. Somaiya, "T-DNS: Connection-Oriented DNS to Improve
-              Privacy and Security (extended)",
-              <http://www.isi.edu/publications/trpublic/files/
-              tr-693.pdf>.
+              and N. Somaiya, "Connection-Oriented DNS to Improve
+              Privacy and Security",
+              <http://www.isi.edu/~johnh/PAPERS/Zhu15b.pdf>.
 
    [RFC6824]  Ford, A., Raiciu, C., Handley, M., and O. Bonaventure,
               "TCP Extensions for Multipath Operation with Multiple
@@ -721,7 +720,8 @@ Appendix A.  Summary of Advantages and Disadvantages to using TCP for
    The TCP handshake generally prevents address spoofing and, therefore,
    the reflection/amplification attacks which plague UDP.
 
-
+   TCP does not suffer from UDP's issues with fragmentation.
+   Middleboxes are known to block IP fragments, leading to timeouts and
 
 
 
@@ -730,8 +730,6 @@ Dickinson, et al.       Expires December 3, 2015               [Page 13]
 Internet-Draft                DNS over TCP                      Jun 2015
 
 
-   TCP does not suffer from UDP's issues with fragmentation.
-   Middleboxes are known to block IP fragments, leading to timeouts and
    forcing client implementations to "hunt" for EDNS0 reply size values
    supported by the network path.  Additionally, fragmentation may lead
    to cache poisoning [fragmentation-considered-poisonous].
@@ -777,6 +775,8 @@ Appendix B.  Changes -01 to -02
 
    o  Removed references to system calls in TFO section.
 
+   o  Added more discussion on DoS mitigation in Security Considerations
+      section.
 
 
 
@@ -785,9 +785,6 @@ Dickinson, et al.       Expires December 3, 2015               [Page 14]
 
 Internet-Draft                DNS over TCP                      Jun 2015
 
-
-   o  Added more discussion on DoS mitigation in Security Considerations
-      section.
 
    o  Added statement that servers MAY use 0 idle timeout.
 
@@ -833,6 +830,9 @@ Appendix D.  Changes to RFC 5966
    1.  DNS implementations are recommended not only to support TCP but
        to support it on an equal footing with UDP
 
+   2.  DNS implementations are recommended to support reuse of TCP
+       connections
+
 
 
 
@@ -841,9 +841,6 @@ Dickinson, et al.       Expires December 3, 2015               [Page 15]
 
 Internet-Draft                DNS over TCP                      Jun 2015
 
-
-   2.  DNS implementations are recommended to support reuse of TCP
-       connections
 
    3.  DNS implementations are recommended to support pipelining and out
        of order processing of the query stream
@@ -885,19 +882,6 @@ Authors' Addresses
    URI:   http://www.isc.org
 
 
-
-
-
-
-
-
-
-
-Dickinson, et al.       Expires December 3, 2015               [Page 16]
-
-Internet-Draft                DNS over TCP                      Jun 2015
-
-
    Allison Mankin
    Verisign Labs
    12061 Bluemont Way
@@ -908,6 +892,12 @@ Internet-Draft                DNS over TCP                      Jun 2015
    Email: amankin@verisign.com
 
 
+
+Dickinson, et al.       Expires December 3, 2015               [Page 16]
+
+Internet-Draft                DNS over TCP                      Jun 2015
+
+
    Duane Wessels
    Verisign Labs
    12061 Bluemont Way
@@ -916,6 +906,16 @@ Internet-Draft                DNS over TCP                      Jun 2015
 
    Phone: +1 703 948-3200
    Email: dwessels@verisign.com
+
+
+
+
+
+
+
+
+
+
 
 
 
