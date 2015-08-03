@@ -22,6 +22,7 @@ An alternate method (rfc include) is described in the references. --><!ENTITY RF
 <!ENTITY RFC4033 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY RFC5155 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5155.xml">
 <!ENTITY RFC5358 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5358.xml">
+<!ENTITY RFC5405 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5405.xml">
 <!ENTITY RFC7323 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7323.xml">
 <!ENTITY RFC7230 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml">
 <!ENTITY RFC2920 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2920.xml">
@@ -602,6 +603,7 @@ please see http://xml.resource.org/authoring/README.html. -->
         <references title="Informative References">
             &RFC7413;
             &RFC6824;
+            &RFC5405;
 	     <reference anchor="RRL">
 	        <front>
 	          <title>DNS Response Rate Limiting (DNS RRL)</title>
@@ -705,7 +707,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 TCP stacks generally implement Path MTU Discovery so they can avoid
                 IP fragmentation of TCP segments.  UDP, on the other hand, does not provide
                 reassembly, which means datagrams that exceed the path MTU size must
-                experience fragmentation.
+                experience fragmentation <xref target="RFC5405"/>.
                 Middleboxes are known to
                 block IP fragments, leading to timeouts and forcing client implementations to "hunt"
                 for EDNS0 reply size values supported by the network path. Additionally,
