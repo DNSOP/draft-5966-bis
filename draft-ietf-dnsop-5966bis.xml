@@ -196,8 +196,8 @@ please see http://xml.resource.org/authoring/README.html. -->
                 implementation.</t>
 
             <t> There are several advantages and disadvantages to the increased use of
-                TCP as well as implementation details that need to be considered.
-                This document addresses these
+                TCP (see <xref target="Appendix-A"/>) as well as implementation details
+                that need to be considered. This document addresses these
                 issues and presents TCP as a valid transport alternative for DNS. It 
                 extends the content of <xref target="RFC5966"/>, with
                 additional considerations and lessons learned from research, developments
@@ -224,10 +224,11 @@ please see http://xml.resource.org/authoring/README.html. -->
                     the first response. </t>
                 <t> Connection Reuse: the sending of multiple queries and responses
                     over a single TCP connection.</t>
-                <t> Idle DNS-over-TCP session: Clients and servers view application level 
-                    idleness differently.  A DNS client considers a DNS-over-TCP session
+                <t> Idle DNS-over-TCP session: Clients and servers view application level
+                    idleness differently.  A DNS client considers an established DNS-over-TCP session
                     to be idle when it has no pending queries to send and there are no outstanding
-                    responses. A DNS server considers a DNS-over-TCP session to be idle when it has
+                    responses. A DNS server considers an established DNS-over-TCP session to be idle
+                    when it has
                     sent responses to all the queries it has received on that connection.</t>
                 <t> Pipelining: the sending of multiple queries and responses over a single TCP
                     connection but not waiting for any outstanding replies before sending another
@@ -433,7 +434,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
                 <section title="Idle Timeouts" anchor="idle">
                     <t> To mitigate the risk of unintentional server overload, DNS clients MUST take
-                        care to minimize the idle time of DNS-over-TCP sessions made to any
+                        care to minimize the idle time of established DNS-over-TCP sessions made to any
                         individual server. DNS clients SHOULD close the TCP
                         connection of an idle session, unless an idle timeout has been established
                         using some other signalling mechanism, for example, <xref target="edns-tcp-keepalive"/>.</t>
@@ -511,7 +512,8 @@ please see http://xml.resource.org/authoring/README.html. -->
             <t> This section is non-normative.</t>
 
             <t> TCP Fast Open <xref target="RFC7413"/> (TFO) allows data to be carried in the SYN
-                packet. It also saves up to one RTT compared to standard TCP.</t>
+                packet, reducing the cost of re-opening TCP connections. It also saves up to one 
+                RTT compared to standard TCP.</t>
 
             <t> TFO mitigates the security vulnerabilities inherent in sending data in the SYN,
                 especially on a system like DNS where amplification attacks are possible, by use of
@@ -546,7 +548,8 @@ please see http://xml.resource.org/authoring/README.html. -->
                 techniques for the mitigation of DoS attacks at the network level have improved
                 substantially since DNS was first designed.</t>
 
-            <t> Readers are advised to familiarise themselves with <xref target="CPNI-TCP"/>. </t>
+            <t> Readers are advised to familiarise themselves with <xref target="CPNI-TCP"/>,
+                a security assessment of TCP detailing known TCP attacks and countermeasures.</t>
 
             <t> To mitigate the risk of DoS attacks, DNS servers are advised to engage in TCP connection
                 management. This could include maintaining state on existing connections,
@@ -699,7 +702,7 @@ please see http://xml.resource.org/authoring/README.html. -->
             </reference>
     </references>
 
-        <section title="Summary of Advantages and Disadvantages to using TCP for DNS">
+        <section anchor="Appendix-A" title="Summary of Advantages and Disadvantages to using TCP for DNS">
             <t> The TCP handshake generally prevents address spoofing and, therefore, the
                 reflection/amplification attacks which plague UDP.</t>
 
@@ -732,8 +735,12 @@ please see http://xml.resource.org/authoring/README.html. -->
                 <xref target="RFC5625"/>.  This document does not propose any solutions, other than
                 to make it absolutely clear that TCP is a valid transport for DNS and support for
                 it is a requirement for all implementations.</t>
+
             <t> A more in-depth discussion of connection orientated DNS can be found elsewhere
                 <xref target="Connection-Oriented-DNS"/>.</t>
+        </section>
+
+        <section title="Changes -02 to -03">
         </section>
 
         <section title="Changes -01 to -02">
