@@ -453,9 +453,9 @@ Internet-Draft                DNS over TCP                      Jun 2015
    Similarly, servers MAY impose limits on the number of concurrent TCP
    connections being handled for any particular client IP address or
    subnet.  These limits SHOULD be much looser than the client
-   guidelines above, because the server does not know, for example, if
-   the client IP address belongs to a single client or is multiple
-   resolvers on a single machine, or multiple clients behind NAT.
+   guidelines above, because the server does not know, for example, if a
+   client IP address belongs to a single client or is multiple resolvers
+   on a single machine, or multiple clients behind NAT.
 
 6.2.3.  Idle Timeouts
 
@@ -601,7 +601,8 @@ Internet-Draft                DNS over TCP                      Jun 2015
 
    Readers are advised to familiarise themselves with [CPNI-TCP], a
    security assessment of TCP detailing known TCP attacks and
-   countermeasures which references most relevant RFCs.
+   countermeasures which references most of the relevant RFCs on this
+   topic.
 
    To mitigate the risk of DoS attacks, DNS servers are advised to
    engage in TCP connection management.  This could include maintaining
@@ -609,7 +610,6 @@ Internet-Draft                DNS over TCP                      Jun 2015
    controlling request queues to enable fair use.  It is likely to be
    advantageous to provide configurable connection management options,
    for example:
-
 
 
 
@@ -810,7 +810,7 @@ Appendix B.  Changes -02 to -03
 
    Replaced certain lower case RFC2119 keywords to improve clarity.
 
-   Update section 6.2.2 to recognise issues for concurrent zone
+   Updated section 6.2.2 to recognise requirements for concurrent zone
    transfers.
 
    Changed 'client IP address' to 'client IP address or subnet' when

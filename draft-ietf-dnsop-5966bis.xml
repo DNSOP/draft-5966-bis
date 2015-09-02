@@ -427,7 +427,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                     <t> Similarly, servers MAY impose limits on the number of concurrent TCP
                         connections being handled for any particular client IP address or subnet. These limits SHOULD be
                         much looser than the client guidelines above, because the server does not
-                        know, for example, if the client IP address belongs to a single client or is
+                        know, for example, if a client IP address belongs to a single client or is
                         multiple resolvers on a single machine, or multiple clients behind NAT.
                      </t>
                 </section>
@@ -550,7 +550,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <t> Readers are advised to familiarise themselves with <xref target="CPNI-TCP"/>,
                 a security assessment of TCP detailing known TCP attacks and countermeasures which
-                references most relevant RFCs.</t>
+                references most of the relevant RFCs on this topic.</t>
 
             <t> To mitigate the risk of DoS attacks, DNS servers are advised to engage in TCP connection
                 management. This could include maintaining state on existing connections,
