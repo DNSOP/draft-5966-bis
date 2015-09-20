@@ -499,7 +499,7 @@ please see http://xml.resource.org/authoring/README.html. -->
         <section title="TCP Message Length Field" anchor="messagelength">
             <t> For reasons of efficiency, DNS clients and servers SHOULD pass the two-octet length
                 field, and the message described by that length field, to the TCP layer at the same
-                time (e.g., in a single write() system call) to make it more likely that all the
+                time (e.g., in a single "write" system call) to make it more likely that all the
                 data will be transmitted in a single TCP segment.
                 This additionally avoids problems due
                 to some DNS servers being very sensitive to timeout conditions on receiving messages 
@@ -727,7 +727,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <t> Long-lived TCP connections to anycast servers might be disrupted due to routing
                 changes. Clients utilizing TCP for DNS need to always be prepared to re-establish
-                connections or otherwise retry outstanding queries. It can also be possible for TCP
+                connections or otherwise retry outstanding queries. It might also be possible for TCP
                 Multipath <xref target="RFC6824"/> to allow a server to hand a connection over from
                 the anycast address to a unicast address.</t>
 
@@ -740,91 +740,98 @@ please see http://xml.resource.org/authoring/README.html. -->
                 <xref target="Connection-Oriented-DNS"/>.</t>
         </section>
 
-        <section title="Changes -02 to -03">
-            <t>Replaced certain lower case RFC2119 keywords to improve clarity.</t>
+        <section title="Changes between revisions">
+            <t>[Note to RFC Editor: please remove this section prior to publication.]</t>
+             <section title="Changes -02 to -03">
+                 <t>
+                    <list style="symbols">
+                        <t>Replaced certain lower case RFC2119 keywords to improve clarity.</t>
 
-            <t>Updated section 6.2.2 to recognise requirements for concurrent zone transfers.</t>
+                        <t>Updated section 6.2.2 to recognise requirements for concurrent zone transfers.</t>
 
-            <t>Changed 'client IP address' to 'client IP address or subnet' when discussing
-                restrictions on TCP connections from clients.</t>
+                        <t>Changed 'client IP address' to 'client IP address or subnet' when discussing
+                            restrictions on TCP connections from clients.</t>
 
-            <t>Added reference to edns-tcp-keepalive draft.</t>
+                        <t>Added reference to edns-tcp-keepalive draft.</t>
 
-            <t>Added wording to introduction to reference Appendix A and state TCP is a valid
-                transport alternative for DNS.</t>
+                        <t>Added wording to introduction to reference Appendix A and state TCP is a valid
+                            transport alternative for DNS.</t>
 
-            <t>Improved description of CPNI-TCP as a general reference source on TCP security related RFCs.</t>
-        </section>
+                        <t>Improved description of CPNI-TCP as a general reference source on TCP security related RFCs.</t>
+                    </list>
+                </t>
+            </section>
 
-        <section title="Changes -01 to -02">
-            <t>
-                <list style="symbols">
-                    <t> Added more text to Introduction as background to TCP use.</t>
+            <section title="Changes -01 to -02">
+                <t>
+                    <list style="symbols">
+                        <t> Added more text to Introduction as background to TCP use.</t>
 
-                    <t>Added definitions of Persistent connection and Idle session
-                        to Terminology section.</t>
+                        <t>Added definitions of Persistent connection and Idle session
+                            to Terminology section.</t>
 
-                    <t>Separated Connection Handling section into Current Practice and
-                        Recommendations. Provide more detail on current practices and 
-                        divided Recommendations up into more granular sub-sections.</t>
+                        <t>Separated Connection Handling section into Current Practice and
+                            Recommendations. Provide more detail on current practices and 
+                            divided Recommendations up into more granular sub-sections.</t>
 
-                    <t>Add section on Idle time with new text on recommendations for 
-                        client idle behaviour.</t>
+                        <t>Add section on Idle time with new text on recommendations for 
+                            client idle behaviour.</t>
 
-                    <t>Move TCP message field length discussion to separate section.</t>
+                        <t>Move TCP message field length discussion to separate section.</t>
 
-                    <t>Removed references to system calls in TFO section.</t>
+                        <t>Removed references to system calls in TFO section.</t>
 
-                    <t>Added more discussion on DoS mitigation in Security Considerations section.</t>
+                        <t>Added more discussion on DoS mitigation in Security Considerations section.</t>
 
-                    <t>Added statement that servers MAY use 0 idle timeout.</t>
+                        <t>Added statement that servers MAY use 0 idle timeout.</t>
 
-                    <t>Re-stated position of TCP as an alternative to UDP in Discussion. </t>
+                        <t>Re-stated position of TCP as an alternative to UDP in Discussion. </t>
                     
-                    <t>Updated text on server limits on concurrent connections from a particular client. </t>
+                        <t>Updated text on server limits on concurrent connections from a particular client. </t>
                     
-                    <t>Added text that client retry logic is outside the scope of this document.</t>
+                        <t>Added text that client retry logic is outside the scope of this document.</t>
                     
-                    <t>Clarified that servers should answer all pipelined queries even if sent very close together.</t>
+                        <t>Clarified that servers should answer all pipelined queries even if sent very close together.</t>
                     
-                </list>
-            </t>
-        </section>
+                    </list>
+                </t>
+            </section>
 
-        <section title="Changes -00 to -01">
-            <t>
-                <list style="symbols">
-                    <t> Changed updates to obsoletes RFC 5966.</t>
+            <section title="Changes -00 to -01">
+                <t>
+                    <list style="symbols">
+                        <t> Changed updates to obsoletes RFC 5966.</t>
 
-                    <t> Improved text in Section 4 Transport Protocol Selection to change "TCP
-                        SHOULD NOT be used only for the transfers and as a fallback" to make the
-                        intention clearer and more consistent.</t>
+                        <t> Improved text in Section 4 Transport Protocol Selection to change "TCP
+                            SHOULD NOT be used only for the transfers and as a fallback" to make the
+                            intention clearer and more consistent.</t>
 
-                    <t> Reference to TCP FASTOPEN updated now that it is an RFC.</t>
+                        <t> Reference to TCP FASTOPEN updated now that it is an RFC.</t>
 
-                    <t> Added paragraph to say that implementations MUST NOT send the TCP framing 2
-                        byte length field in a separate packet to the DNS message.</t>
+                        <t> Added paragraph to say that implementations MUST NOT send the TCP framing 2
+                            byte length field in a separate packet to the DNS message.</t>
 
-                    <t> Added Terminology section.</t>
+                        <t> Added Terminology section.</t>
 
-                    <t> Changed should and RECOMMENDED in reference to parallel processing
-                        to SHOULD in sections 7 and 8.</t>
+                        <t> Changed should and RECOMMENDED in reference to parallel processing
+                            to SHOULD in sections 7 and 8.</t>
 
-                    <t> Added text to address what a server should do when a client closes the TCP
-                        connection before pending responses are sent.</t>
-                    <t> Moved the Advantages and Disadvantages section to an appendix.</t>
-                </list>
-            </t>
-        </section>
+                        <t> Added text to address what a server should do when a client closes the TCP
+                            connection before pending responses are sent.</t>
+                        <t> Moved the Advantages and Disadvantages section to an appendix.</t>
+                    </list>
+                </t>
+            </section>
 
-        <section title="Changes to RFC 5966">
-            <t> This document differs from RFC 5966 in four additions:<list style="numbers"><t>
-                DNS implementations are recommended not only to support TCP but to support it on an
-                equal footing with UDP</t>
-            <t> DNS implementations are recommended to support reuse of TCP connections</t>
-          <t> DNS implementations are recommended to support pipelining and out of order processing
-              of the query stream</t>
-          <t> A non-normative discussion of use of TCP Fast Open is added</t></list></t>
+            <section title="Changes to RFC 5966">
+                <t> This document differs from RFC 5966 in four additions:<list style="numbers"><t>
+                    DNS implementations are recommended not only to support TCP but to support it on an
+                    equal footing with UDP</t>
+                <t> DNS implementations are recommended to support reuse of TCP connections</t>
+              <t> DNS implementations are recommended to support pipelining and out of order processing
+                  of the query stream</t>
+              <t> A non-normative discussion of use of TCP Fast Open is added</t></list></t>
+            </section>
         </section>
     </back>
 </rfc>
