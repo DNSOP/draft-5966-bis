@@ -54,7 +54,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-dnsop-5966bis-03" ipr="trust200902" obsoletes="5966">
+<rfc category="std" docName="draft-ietf-dnsop-5966bis-04" ipr="trust200902" obsoletes="5966">
     <!-- category values: std, bcp, info, exp, and historic
   ipr values: full3667, noModification3667, noDerivatives3667
   you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -138,7 +138,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 <email>dwessels@verisign.com</email>
             </address>
         </author>
-        <date month="Sep" year="2015"/>
+        <date month="Oct" year="2015"/>
         <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
           in the current day for you. If only the current year is specified, xml2rfc will fill
         in the current day and month for you. If the year is not the current one, it is
@@ -163,7 +163,7 @@ please see http://xml.resource.org/authoring/README.html. -->
             <t> This document specifies the requirement for support of TCP as a
                 transport protocol for DNS implementations and provides
                 guidelines towards DNS-over-TCP performance on par with that
-                of DNS-over-UDP. </t>
+                of DNS-over-UDP. This document obsoletes RFC5966.</t>
         </abstract>
     </front>
     <middle>
@@ -243,7 +243,7 @@ please see http://xml.resource.org/authoring/README.html. -->
         </section>
 
         <section title="Discussion">
-            <t> In the absence of EDNS0 (Extension Mechanisms for DNS 0) (see below), the normal
+            <t> In the absence of EDNS0 (<xref target="RFC6891">Extension Mechanisms for DNS 0</xref>) (see below), the normal
                 behaviour of any DNS server needing to send a UDP response that would exceed the
                 512-byte limit is for the server to truncate the response so that it fits within
                 that limit and then set the TC flag in the response header. When the client receives
@@ -264,7 +264,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 than 512 bytes.</t>
 
             <t> Since the original core specifications for DNS were written, the Extension
-                Mechanisms for DNS (<xref target="RFC6891">EDNS0</xref>) have been introduced. These
+                Mechanisms for DNS have been introduced. These
                 extensions can be used to indicate that the client is prepared to receive UDP
                 responses larger than 512 bytes. An EDNS0-compatible server receiving a request from
                 an EDNS0-compatible client may send UDP packets up to that client's announced buffer
@@ -295,15 +295,16 @@ please see http://xml.resource.org/authoring/README.html. -->
                         they do not prevent large responses from a TCP-capable server from reaching
                         its TCP-capable clients.</t>
                     <t> Stub resolver implementations (e.g., an operating system's DNS resolution
-                        library) MUST support TCP since to do otherwise would limit their
-                        interoperability with their own clients and with upstream servers. </t>
+                        library) MUST support TCP since to do otherwise would limit the
+                        interoperability between their own clients and upstream servers. </t>
                 </list></t>
 
             <t> Regarding the choice of when to use UDP or TCP, Section 6.1.3.2 of RFC 1123 also
                 says: <list><t><vspace/>... a DNS resolver or server that is sending a
                 non-zone-transfer query MUST send a UDP query first.</t></list></t>
 
-            <t> This requirement is hereby relaxed. A resolver MAY elect to send either TCP or UDP
+            <t> This requirement is hereby relaxed. Stub resolvers and recursive resolvers MAY elect 
+                to send either TCP or UDP
                 queries depending on local operational reasons. TCP MAY be used before sending any
                 UDP queries. If it already has an open TCP connection to the server it SHOULD reuse
                 this connection. In essence, TCP ought to be considered a valid alternative transport
@@ -386,8 +387,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 
                     <t> When sending multiple queries over a TCP connection clients MUST
                         take care to avoid Message ID collisions. In other words, they
-                        MUST not re-use the DNS
-                        Message ID of an in-flight query. This is especially important if the server
+                        MUST NOT re-use the DNS
+                        Message ID of an in-flight query on the same TCP connection. 
+                        This is especially important if the server
                         could be performing out-of-order processing (see <xref target="re-ordering"/>).</t>
 
                     <section title="Query Pipelining" anchor="pipelining">
@@ -397,12 +399,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 
                         <t> In order to achieve performance on par with UDP DNS clients SHOULD
                             pipeline their queries. When a DNS client sends multiple queries to a
-                            server, it SHOULD not wait for an outstanding reply before sending the
+                            server, it SHOULD NOT wait for an outstanding reply before sending the
                             next query. Clients SHOULD treat TCP and UDP equivalently when
                             considering the time at which to send a particular query.</t>
-                        <t> DNS clients will benefit from noting that DNS servers that do not both process
-                            pipelined queries concurrently and send out-of-order responses will
-                            likely not provide performance on a par with UDP. If TCP performance is
+                        <t> It is likely that DNS servers need to process pipelined
+                            queries concurrently and also send out-of-order responses
+                            over TCP in order to provide the level of performance
+                            possible with UDP transport. If TCP performance is
                             of importance, clients might find it useful to use server processing times
                             as input to server and transport selection algorithms.</t>
                         <t> DNS servers (especially recursive) SHOULD expect to receive
@@ -427,8 +430,9 @@ please see http://xml.resource.org/authoring/README.html. -->
                     <t> Similarly, servers MAY impose limits on the number of concurrent TCP
                         connections being handled for any particular client IP address or subnet. These limits SHOULD be
                         much looser than the client guidelines above, because the server does not
-                        know, for example, if a client IP address belongs to a single client or is
-                        multiple resolvers on a single machine, or multiple clients behind NAT.
+                        know, for example, if a client IP address belongs to a single client or 
+                        is multiple resolvers on a single machine, or multiple clients behind a device performing
+                        Network Address Translation (NAT).
                      </t>
                 </section>
 
@@ -449,6 +453,12 @@ please see http://xml.resource.org/authoring/README.html. -->
                         made on a single connection as originally specified in
                         <xref target="RFC1035"/>. Servers MAY use zero timeouts when experiencing
                         heavy load or are under attack.</t>
+                        
+                    <t>DNS messages delivered over TCP might arrive in multiple segments.
+                        A DNS server that resets its idle timeout after receiving a single segment might
+                        be vulnerable to a "slow read attack." For this reason, servers SHOULD
+                        apply the idle timeout to the receipt of a full DNS message, rather than to
+                        receipt of any part of a DNS message.</t>
                 </section>
 
                 <section title="Tear Down" anchor="timeouts">
@@ -479,8 +489,8 @@ please see http://xml.resource.org/authoring/README.html. -->
                 </t></list></t>
 
             <t> For the avoidance of future doubt, this requirement is clarified.
-                Authoritative servers and recursive resolvers are RECOMMENDED to support the sending
-                of responses in parallel and/or out-of-order, regardless of the transport protocol
+                Authoritative servers and recursive resolvers are RECOMMENDED to support the preparing
+                of responses in parallel and sending them out-of-order, regardless of the transport protocol
                 in use. Stub and recursive resolvers MUST be able to process
                 responses that arrive in a different order to that in which the requests were
                 sent, regardless of the transport protocol in use.</t>
@@ -491,7 +501,9 @@ please see http://xml.resource.org/authoring/README.html. -->
                 out-of-order.</t>
 
             <t> Since pipelined responses can arrive out-of-order, clients MUST match responses
-                to outstanding queries using the ID field and port number.
+                to outstanding queries on the same TCP connection using the Message ID. If
+                the response contains a question section the client MUST match the QNAME, QCLASS and 
+                QTYPE fields.
                 Failure by clients to properly match responses to outstanding
                 queries can have serious consequences for interoperability.</t>
         </section>
@@ -500,11 +512,15 @@ please see http://xml.resource.org/authoring/README.html. -->
             <t> For reasons of efficiency, DNS clients and servers SHOULD pass the two-octet length
                 field, and the message described by that length field, to the TCP layer at the same
                 time (e.g., in a single "write" system call) to make it more likely that all the
-                data will be transmitted in a single TCP segment.
-                This additionally avoids problems due
+                data will be transmitted in a single TCP segment.</t>
+
+            <t> This additionally avoids problems due
                 to some DNS servers being very sensitive to timeout conditions on receiving messages 
                 (they might abort a TCP session if the first TCP segment does not contain both
-                the length field and the entire message).</t>
+                the length field and the entire message). Such behavior is certainly undesirable.
+                As described in <xref target="idle"/>, servers SHOULD apply
+                connection timeouts to the receipt of a full message and MUST NOT close a connection
+                simply because the first "read" from the TCP layer does not contain the entire message.</t>
         </section>
 
         <section title="TCP Fast Open" anchor="fastopen">
@@ -570,19 +586,21 @@ please see http://xml.resource.org/authoring/README.html. -->
                 this is outside the scope of this document.</t>
 
             <t> Operators of recursive servers are advised to ensure that they only accept connections from
-                expected clients, and do not accept them from unknown sources. In the case of UDP
-                traffic, this will help protect against <xref target="RFC5358">reflector
+                expected clients (for example by the use of an ACL), and do not accept them from 
+                unknown sources. In the case of UDP
+                traffic, this will help protect against <xref target="RFC5358">reflection
                 attacks</xref> and in the case of TCP traffic it will prevent an unknown client from
                 exhausting the server's limits on the number of concurrent connections.</t>
         </section>
 
         <section anchor="Acknowledgements" title="Acknowledgements">
             <t> The authors would like to thank Francis Dupont and Paul Vixie for detailed review,
-                Andrew Sullivan, Tony Finch, Stephane Bortzmeyer and the many others who contributed
+                Andrew Sullivan, Tony Finch, Stephane Bortzmeyer, Joe Abley, Tatuya Jinmei and 
+                the many others who contributed
                 to the mailing list discussion. Also Liang Zhu, Zi
                 Hu, and John Heidemann for extensive DNS-over-TCP discussions and code. Lucie
                 Guiraud and Danny McPherson for reviewing early versions of this document.
-                We would also like to thank all those who contributed to RFC 5966.</t>
+                We would also like to thank all those who contributed to RFC5966.</t>
         </section>
     </middle>
 
@@ -645,11 +663,11 @@ please see http://xml.resource.org/authoring/README.html. -->
                <author initials='R' surname='Bellis' fullname='R. Bellis'> 
                <organization>ISC</organization>
                </author>
-               <date month='May' day='5' year='2015' /> 
+               <date month='Oct' day='20' year='2015' /> 
                </front> 
-               <seriesInfo name='Internet-Draft' value='draft-ietf-dnsop-edns-tcp-keepalive-02' /> 
+               <seriesInfo name='Internet-Draft' value='draft-ietf-dnsop-edns-tcp-keepalive-04' /> 
                <format type='TXT' 
-                     target='https://tools.ietf.org/html/draft-ietf-dnsop-edns-tcp-keepalive-02' /> 
+                     target='https://tools.ietf.org/html/draft-ietf-dnsop-edns-tcp-keepalive-04' /> 
             </reference>
             <reference anchor="CPNI-TCP"
                        target="http://www.gont.com.ar/papers/tn-03-09-security-assessment-TCP.pdf">
@@ -742,6 +760,17 @@ please see http://xml.resource.org/authoring/README.html. -->
 
         <section title="Changes between revisions">
             <t>[Note to RFC Editor: please remove this section prior to publication.]</t>
+            <section title="Changes -03 to -04">
+                    <t><list style="symbols">
+                        <t>Re-stated how messages received over TCP should be mapped to queries.</t>
+                        <t>Added wording to cover timeouts for server side behaviour for
+                            when receiving TCP messages.</t>
+                        <t>Added sentence to abstract stating this obsoletes RFC5966.</t>
+                        <t>Moved reference to RFC6891 earlier in Discussion section.</t>
+                        <t>Several minor wording updates to improve clarity.</t>
+                        <t>Corrected nits and updated references.</t>
+                    </list></t>
+             </section>
              <section title="Changes -02 to -03">
                  <t>
                     <list style="symbols">
