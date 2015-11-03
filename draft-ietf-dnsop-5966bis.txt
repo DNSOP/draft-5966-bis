@@ -6,11 +6,11 @@ dnsop                                                       J. Dickinson
 Internet-Draft                                              S. Dickinson
 Obsoletes: 5966 (if approved)                                    Sinodun
 Intended status: Standards Track                               R. Bellis
-Expires: April 24, 2016                                              ISC
+Expires: May 6, 2016                                                 ISC
                                                                A. Mankin
                                                               D. Wessels
                                                            Verisign Labs
-                                                        October 22, 2015
+                                                        November 3, 2015
 
 
           DNS Transport over TCP - Implementation Requirements
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 24, 2016.
+   This Internet-Draft will expire on May 6, 2016.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Dickinson, et al.        Expires April 24, 2016                 [Page 1]
+Dickinson, et al.          Expires May 6, 2016                  [Page 1]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    to this document.  Code Components extracted from this document must
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Dickinson, et al.        Expires April 24, 2016                 [Page 2]
+Dickinson, et al.          Expires May 6, 2016                  [Page 2]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    increased TCP use has also been driven by the protection it provides
@@ -165,9 +165,9 @@ Internet-Draft                DNS over TCP                  October 2015
 
 
 
-Dickinson, et al.        Expires April 24, 2016                 [Page 3]
+Dickinson, et al.          Expires May 6, 2016                  [Page 3]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    o  Persistent connection: a TCP connection that is not closed either
@@ -221,9 +221,9 @@ Internet-Draft                DNS over TCP                  October 2015
 
 
 
-Dickinson, et al.        Expires April 24, 2016                 [Page 4]
+Dickinson, et al.          Expires May 6, 2016                  [Page 4]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    a DNSSEC-signed zone using NextSECure 3 (NSEC3) [RFC5155] is almost
@@ -277,9 +277,9 @@ Internet-Draft                DNS over TCP                  October 2015
 
 
 
-Dickinson, et al.        Expires April 24, 2016                 [Page 5]
+Dickinson, et al.          Expires May 6, 2016                  [Page 5]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
       ... a DNS resolver or server that is sending a non-zone-transfer
@@ -333,9 +333,9 @@ Internet-Draft                DNS over TCP                  October 2015
 
 
 
-Dickinson, et al.        Expires April 24, 2016                 [Page 6]
+Dickinson, et al.          Expires May 6, 2016                  [Page 6]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    recommendations with regard to DNS client idle timeouts.  However it
@@ -389,9 +389,9 @@ Internet-Draft                DNS over TCP                  October 2015
 
 
 
-Dickinson, et al.        Expires April 24, 2016                 [Page 7]
+Dickinson, et al.          Expires May 6, 2016                  [Page 7]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    When sending multiple queries over a TCP connection clients MUST take
@@ -445,9 +445,9 @@ Internet-Draft                DNS over TCP                  October 2015
 
 
 
-Dickinson, et al.        Expires April 24, 2016                 [Page 8]
+Dickinson, et al.          Expires May 6, 2016                  [Page 8]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    on a single machine, or multiple clients behind a device performing
@@ -501,9 +501,9 @@ Internet-Draft                DNS over TCP                  October 2015
 
 
 
-Dickinson, et al.        Expires April 24, 2016                 [Page 9]
+Dickinson, et al.          Expires May 6, 2016                  [Page 9]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
 7.  Response Reordering
@@ -557,9 +557,9 @@ Internet-Draft                DNS over TCP                  October 2015
 
 
 
-Dickinson, et al.        Expires April 24, 2016                [Page 10]
+Dickinson, et al.          Expires May 6, 2016                 [Page 10]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
 9.  TCP Fast Open
@@ -613,9 +613,9 @@ Internet-Draft                DNS over TCP                  October 2015
 
 
 
-Dickinson, et al.        Expires April 24, 2016                [Page 11]
+Dickinson, et al.          Expires May 6, 2016                 [Page 11]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    Readers are advised to familiarise themselves with [CPNI-TCP], a
@@ -669,9 +669,9 @@ Internet-Draft                DNS over TCP                  October 2015
 
 
 
-Dickinson, et al.        Expires April 24, 2016                [Page 12]
+Dickinson, et al.          Expires May 6, 2016                 [Page 12]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
 13.  References
@@ -725,9 +725,9 @@ Internet-Draft                DNS over TCP                  October 2015
 
 
 
-Dickinson, et al.        Expires April 24, 2016                [Page 13]
+Dickinson, et al.          Expires May 6, 2016                 [Page 13]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    [RFC7230]  Fielding, R. and J. Reschke, "Hypertext Transfer Protocol
@@ -781,9 +781,9 @@ Appendix A.  Summary of Advantages and Disadvantages to using TCP for
 
 
 
-Dickinson, et al.        Expires April 24, 2016                [Page 14]
+Dickinson, et al.          Expires May 6, 2016                 [Page 14]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    IP fragmentation is less of a problem for TCP than it is for UDP.
@@ -837,9 +837,9 @@ B.1.  Changes -03 to -04
 
 
 
-Dickinson, et al.        Expires April 24, 2016                [Page 15]
+Dickinson, et al.          Expires May 6, 2016                 [Page 15]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    o  Moved reference to RFC6891 earlier in Discussion section.
@@ -893,9 +893,9 @@ B.3.  Changes -01 to -02
 
 
 
-Dickinson, et al.        Expires April 24, 2016                [Page 16]
+Dickinson, et al.          Expires May 6, 2016                 [Page 16]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    o  Updated text on server limits on concurrent connections from a
@@ -949,9 +949,9 @@ B.5.  Changes to RFC 5966
 
 
 
-Dickinson, et al.        Expires April 24, 2016                [Page 17]
+Dickinson, et al.          Expires May 6, 2016                 [Page 17]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
 Authors' Addresses
@@ -1005,9 +1005,9 @@ Authors' Addresses
 
 
 
-Dickinson, et al.        Expires April 24, 2016                [Page 18]
+Dickinson, et al.          Expires May 6, 2016                 [Page 18]
 
-Internet-Draft                DNS over TCP                  October 2015
+Internet-Draft                DNS over TCP                 November 2015
 
 
    Duane Wessels
@@ -1061,4 +1061,4 @@ Internet-Draft                DNS over TCP                  October 2015
 
 
 
-Dickinson, et al.        Expires April 24, 2016                [Page 19]
+Dickinson, et al.          Expires May 6, 2016                 [Page 19]
