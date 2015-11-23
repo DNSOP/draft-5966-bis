@@ -28,6 +28,8 @@ An alternate method (rfc include) is described in the references. --><!ENTITY RF
 <!ENTITY RFC2920 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2920.xml">
 <!ENTITY RFC4786 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4786.xml">
 <!ENTITY RFC7413 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7413.xml">
+<!ENTITY RFC5936 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5936.xml">
+<!ENTITY RFC1995 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1995.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
@@ -495,6 +497,10 @@ please see http://xml.resource.org/authoring/README.html. -->
                 responses that arrive in a different order to that in which the requests were
                 sent, regardless of the transport protocol in use.</t>
 
+	    <t> Note that AXFR <xref target="RFC5936"/> and IXFR <xref target="RFC1995"/> have the
+		property that one query message might result in multiple response messages. Therefore,
+		those protocols have their own specific ordering requirements.</t>
+
             <t> In order to achieve performance on par with UDP, recursive
                 resolvers SHOULD process TCP queries in parallel and return
                 individual responses as soon as they are available, possibly
@@ -620,6 +626,8 @@ please see http://xml.resource.org/authoring/README.html. -->
             &RFC5358;
             &RFC4786;
             &RFC7230;
+            &RFC5936;
+            &RFC1995;
         </references>
         <references title="Informative References">
             &RFC7413;
