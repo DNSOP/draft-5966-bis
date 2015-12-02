@@ -54,7 +54,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-dnsop-5966bis-04" ipr="trust200902" obsoletes="5966">
+<rfc category="std" docName="draft-ietf-dnsop-5966bis-05" ipr="trust200902" obsoletes="5966">
     <!-- category values: std, bcp, info, exp, and historic
   ipr values: full3667, noModification3667, noDerivatives3667
   you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -138,7 +138,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 <email>dwessels@verisign.com</email>
             </address>
         </author>
-        <date month="Nov" year="2015"/>
+        <date month="Dec" year="2015"/>
         <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
           in the current day for you. If only the current year is specified, xml2rfc will fill
         in the current day and month for you. If the year is not the current one, it is
@@ -207,7 +207,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 servers to meet, it does offer some suggestions to operators to help
                 ensure that support for TCP on their servers and network is optimal.
                 It should be noted that failure to support TCP (or the blocking of DNS over TCP at
-                the network layer) may result in resolution failure and/or application-level
+                the network layer) will probably result in resolution failure and/or application-level
                 timeouts. </t>
         </section>
 
@@ -217,7 +217,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 document are to be interpreted as described in <xref target="RFC2119"/>.</t>
         </section>
 
-        <section title="Terminology">
+        <section title="Terminology" anchor="terminology">
             <t><list style="symbols">
                 <t> Persistent connection: a TCP connection that is not closed either by the
                     server after sending the first response nor by the client after receiving
@@ -375,7 +375,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 </section>
             </section>
 
-            <section title="Recommendations" anchor="recommedations">
+            <section title="Recommendations" anchor="recommendations">
                 <t> The following sections include recommendations that are intended to result in
                     more consistent and scalable implementations of DNS-over-TCP.</t>
 
@@ -759,7 +759,8 @@ please see http://xml.resource.org/authoring/README.html. -->
         </section>
 
         <section title="Changes between revisions">
-            <t>[Note to RFC Editor: please remove this section prior to publication.]</t>
+            <t>[Note to RFC Editor: please remove this section
+                prior to publication.]</t>
             <section title="Changes -03 to -04">
                     <t><list style="symbols">
                         <t>Re-stated how messages received over TCP should be mapped to queries.</t>
@@ -851,16 +852,36 @@ please see http://xml.resource.org/authoring/README.html. -->
                     </list>
                 </t>
             </section>
+        </section>
 
-            <section title="Changes to RFC 5966">
-                <t> This document differs from RFC 5966 in four additions:<list style="numbers"><t>
-                    DNS implementations are recommended not only to support TCP but to support it on an
-                    equal footing with UDP</t>
-                <t> DNS implementations are recommended to support reuse of TCP connections</t>
-              <t> DNS implementations are recommended to support pipelining and out of order processing
-                  of the query stream</t>
-              <t> A non-normative discussion of use of TCP Fast Open is added</t></list></t>
-            </section>
+        <section title="Changes to RFC5966">
+            <t>[Note to RFC Editor: please leave this section in the final document.]</t>
+            <t> This document obsoletes <xref target="RFC5966"/> and differs from it in several respects. An overview of
+               the most 
+                substantial changes/updates that implementors should take note of is given below:<list style="numbers">
+
+            <t>A <xref target="terminology">Terminology section</xref> is added defining several new concepts.</t>
+            <t>Paragraph 3 of <xref target="selection"/> puts TCP on a more equal footing with 
+                UDP than RFC5966. For example it states:
+                <list>
+                    <t>TCP MAY be used before sending any UDP queries.</t>
+                    <t>TCP ought to be considered a valid alternative transport
+                       to UDP, not purely a fallback option.</t>
+                </list>
+            </t>
+            <t><xref target="reuse"/> adds a new recommendation that TCP connection-reuse SHOULD be supported. </t>
+            <t><xref target="pipelining"/> adds a new recommendation that DNS clients SHOULD pipeline their queries
+            and DNS servers SHOULD process pipelined queries concurrently.</t>
+            <t><xref target="concurrency"/> adds new recommendations on the number and usage
+            of TCP connections for client/server interactions. </t>
+            <t><xref target="idle"/> adds a new recommendation that DNS clients SHOULD close idle sessions
+            unless using a signalling mechanism. </t>
+            <t><xref target="re-ordering"/> clarifies that servers are RECOMMENDED to prepare TCP responses in 
+            parallel and send answers out-of-order. It also clarifies how TCP queries and responses should be matched by clients.</t>
+            <t><xref target="messagelength"/> adds a new recommendation about how DNS clients and servers should handle the 2 byte
+            message length field for TCP messages. </t>
+           <t> <xref target="fastopen"/> adds a non-normative discussion of the use of TCP Fast Open.</t>
+           <t>The <xref target="security"/> adds new advice regarding DoS mitigation techniques. </t></list></t>
         </section>
     </back>
 </rfc>
