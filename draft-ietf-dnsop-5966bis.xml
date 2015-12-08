@@ -25,6 +25,7 @@ An alternate method (rfc include) is described in the references. --><!ENTITY RF
 <!ENTITY RFC5405 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5405.xml">
 <!ENTITY RFC7323 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7323.xml">
 <!ENTITY RFC7230 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml">
+<!ENTITY RFC7540 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7540.xml">
 <!ENTITY RFC2920 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2920.xml">
 <!ENTITY RFC4786 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4786.xml">
 <!ENTITY RFC7413 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7413.xml">
@@ -54,7 +55,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-dnsop-5966bis-05" ipr="trust200902" obsoletes="5966">
+<rfc category="std" docName="draft-ietf-dnsop-5966bis-05" ipr="trust200902" updates="1035,1123" obsoletes="5966">
     <!-- category values: std, bcp, info, exp, and historic
   ipr values: full3667, noModification3667, noDerivatives3667
   you can add the attributes updates="NNNN" and obsoletes="NNNN"
@@ -176,7 +177,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                 The need for increased TCP use has also been driven by the 
                 protection it provides against address spoofing and therefore 
                 exploitation of DNS in reflection/amplification attacks.
-                It is now widely used in Response Rate Limiting <xref target="RRL"/>.</t>
+                It is now widely used in Response Rate Limiting <xref target="RRL1"/><xref target="RRL2"/>.</t>
 
             <t> Section 6.1.3.2 of <xref target="RFC1123"/> states:
                 <list><t><vspace/>DNS resolvers and recursive servers MUST support UDP, and SHOULD
@@ -287,7 +288,8 @@ please see http://xml.resource.org/authoring/README.html. -->
         </section>
 
         <section title="Transport Protocol Selection" anchor="selection">
-            <t> All general-purpose DNS implementations MUST support both UDP and TCP transport.</t>
+            <t> Section 6.1.3.2 of <xref target="RFC1123"/> is updated: All general-purpose DNS 
+                implementations MUST support both UDP and TCP transport.</t>
             <t><list style="symbols">
                     <t> Authoritative server implementations MUST support TCP so that they do not
                         limit the size of responses to what fits in a single UDP packet.</t>
@@ -332,7 +334,8 @@ please see http://xml.resource.org/authoring/README.html. -->
                            queries anyway, a unilateral close or reset may be used instead of
                            graceful close.</t></list></t>
 
-                <t> Other more modern protocols (e.g., <xref target="RFC7230">HTTP/1.1</xref>)
+                <t> Other more modern protocols (e.g., <xref target="RFC7230">HTTP/1.1</xref>, 
+                    <xref target="RFC7540">HTTP/2</xref>)
                     have support by default for persistent TCP connections for all
                     requests. Connections are then normally closed via a 'connection close' signal
                     from one party. </t>
@@ -385,10 +388,9 @@ please see http://xml.resource.org/authoring/README.html. -->
                         both clients and servers SHOULD support connection reuse by sending multiple
                         queries and responses over a single persistent TCP connection.</t>
 
-                    <t> When sending multiple queries over a TCP connection clients MUST
-                        take care to avoid Message ID collisions. In other words, they
-                        MUST NOT re-use the DNS
-                        Message ID of an in-flight query on the same TCP connection. 
+                    <t> When sending multiple queries over a TCP connection clients MUST NOT re-use
+                        the DNS Message ID of an in-flight query on that connection in order to
+                        avoid Message ID collisions.
                         This is especially important if the server
                         could be performing out-of-order processing (see <xref target="re-ordering"/>).</t>
 
@@ -456,26 +458,26 @@ please see http://xml.resource.org/authoring/README.html. -->
                         
                     <t>DNS messages delivered over TCP might arrive in multiple segments.
                         A DNS server that resets its idle timeout after receiving a single segment might
-                        be vulnerable to a "slow read attack." For this reason, servers SHOULD
-                        apply the idle timeout to the receipt of a full DNS message, rather than to
-                        receipt of any part of a DNS message.</t>
+                        be vulnerable to a "slow read attack." For this reason, servers SHOULD reset
+                        the idle timeout on the receipt of a full DNS message, rather
+                        than on receipt of any part of a DNS message.</t>
                 </section>
 
                 <section title="Tear Down" anchor="timeouts">
-                    <t> Under normal operation clients typically initiate connection closing on idle
-                        connections however servers can close the connection if their local idle
+                    <t> Under normal operation DNS clients typically initiate connection closing on idle
+                        connections however DNS servers can close the connection if their local idle
                         timeout policy is exceeded. Connections can be also closed by either end
                         under unusual conditions such as defending against an attack or system
                         failure/reboot.</t>
 
-                    <t> Clients SHOULD retry unanswered queries if the connection closes before 
+                    <t> DNS Clients SHOULD retry unanswered queries if the connection closes before 
                         receiving all outstanding responses. No specific retry algorithm is specified
                         in this document. </t>
 
-                    <t> If a server finds that a client has closed a TCP session, or if the
+                    <t> If a DNS server finds that a DNS client has closed a TCP session, or if the
                         session has been otherwise interrupted, before all pending responses
                         have been sent then the server MUST NOT attempt to send those
-                        responses. Of course the server MAY cache those responses.</t>
+                        responses. Of course the DNS server MAY cache those responses.</t>
                 </section>
             </section>
         </section>
@@ -620,12 +622,14 @@ please see http://xml.resource.org/authoring/README.html. -->
             &RFC5358;
             &RFC4786;
             &RFC7230;
+            &RFC7540;
         </references>
         <references title="Informative References">
             &RFC7413;
             &RFC6824;
             &RFC5405;
-	     <reference anchor="RRL">
+	     <reference anchor="RRL1"
+	                target="http://ss.vix.su/~vixie/isc-tn-2012-1.txt">
 	        <front>
 	          <title>DNS Response Rate Limiting (DNS RRL)</title>
 
@@ -643,11 +647,19 @@ please see http://xml.resource.org/authoring/README.html. -->
 	            </address>
 	          </author>
 
-	          <date year="2012" month="April"/>
+	          <date year="2014" month="August"/>
 	        </front>
-	        <seriesInfo name="ISC-TN" value="2012-1-Draft1"/>
-	        <format type="TXT" target="http://ss.vix.su/~vixie/isc-tn-2012-1.txt"/>
+ 	        <seriesInfo name="ISC-TN" value="2012-1-Draft1"/>
 	      </reference>
+ 	     <reference anchor="RRL2"
+ 	                target="https://deepthought.isc.org/article/AA-00994/0/Using-the-Response-Rate-Limiting-Feature-in-BIND-9.10.html">
+ 	        <front>
+ 	          <title>BIND RRL</title>
+ 	          <author/>
+ 	          <date year="2012" month="April"/>
+ 	        </front>
+ 	        <seriesInfo name="ISC Knowledge Base" value="AA-00994"/>
+ 	      </reference>
             <reference anchor='edns-tcp-keepalive'> 
                <front> 
                <title>The edns-tcp-keepalive EDNS0 Option</title>
