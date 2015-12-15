@@ -7,10 +7,10 @@ Internet-Draft                                              S. Dickinson
 Obsoletes: 5966 (if approved)                                    Sinodun
 Updates: 1035,1123 (if approved)                               R. Bellis
 Intended status: Standards Track                                     ISC
-Expires: June 10, 2016                                         A. Mankin
+Expires: June 17, 2016                                         A. Mankin
                                                               D. Wessels
                                                            Verisign Labs
-                                                        December 8, 2015
+                                                       December 15, 2015
 
 
           DNS Transport over TCP - Implementation Requirements
@@ -21,7 +21,8 @@ Abstract
    This document specifies the requirement for support of TCP as a
    transport protocol for DNS implementations and provides guidelines
    towards DNS-over-TCP performance on par with that of DNS-over-UDP.
-   This document obsoletes RFC5966.
+   This document obsoletes RFC5966 and therefore updates RFC1035 and
+   RFC1123.
 
 Status of This Memo
 
@@ -38,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 10, 2016.
+   This Internet-Draft will expire on June 17, 2016.
 
 Copyright Notice
 
@@ -49,15 +50,15 @@ Copyright Notice
    Provisions Relating to IETF Documents
    (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
-   carefully, as they describe your rights and restrictions with respect
 
 
 
-Dickinson, et al.         Expires June 10, 2016                 [Page 1]
+Dickinson, et al.         Expires June 17, 2016                 [Page 1]
 
 Internet-Draft                DNS over TCP                 December 2015
 
 
+   carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
@@ -105,15 +106,15 @@ Table of Contents
    [RFC0793] is always used for full zone transfers (AXFR) and is often
    used for messages whose sizes exceed the DNS protocol's original
    512-byte limit.  The growing deployment of DNSSEC and IPv6 has
-   increased response sizes and therefore the use of TCP.  The need for
 
 
 
-Dickinson, et al.         Expires June 10, 2016                 [Page 2]
+Dickinson, et al.         Expires June 17, 2016                 [Page 2]
 
 Internet-Draft                DNS over TCP                 December 2015
 
 
+   increased response sizes and therefore the use of TCP.  The need for
    increased TCP use has also been driven by the protection it provides
    against address spoofing and therefore exploitation of DNS in
    reflection/amplification attacks.  It is now widely used in Response
@@ -164,8 +165,7 @@ Internet-Draft                DNS over TCP                 December 2015
 
 
 
-
-Dickinson, et al.         Expires June 10, 2016                 [Page 3]
+Dickinson, et al.         Expires June 17, 2016                 [Page 3]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                DNS over TCP                 December 2015
 
 
 
-Dickinson, et al.         Expires June 10, 2016                 [Page 4]
+Dickinson, et al.         Expires June 17, 2016                 [Page 4]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                DNS over TCP                 December 2015
 
 
 
-Dickinson, et al.         Expires June 10, 2016                 [Page 5]
+Dickinson, et al.         Expires June 17, 2016                 [Page 5]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                DNS over TCP                 December 2015
 
 
 
-Dickinson, et al.         Expires June 10, 2016                 [Page 6]
+Dickinson, et al.         Expires June 17, 2016                 [Page 6]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                DNS over TCP                 December 2015
 
 
 
-Dickinson, et al.         Expires June 10, 2016                 [Page 7]
+Dickinson, et al.         Expires June 17, 2016                 [Page 7]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -422,8 +422,8 @@ Internet-Draft                DNS over TCP                 December 2015
    DNS servers (especially recursive) SHOULD expect to receive pipelined
    queries.  The server SHOULD process TCP queries concurrently, just as
    it would for UDP.  The server SHOULD answer all pipelined queries,
-   even if they are sent in quick succession.  The handling of responses
-   to pipelined queries is covered in Section 7.
+   even if they are received in quick succession.  The handling of
+   responses to pipelined queries is covered in Section 7.
 
 6.2.2.  Concurrent connections
 
@@ -445,7 +445,7 @@ Internet-Draft                DNS over TCP                 December 2015
 
 
 
-Dickinson, et al.         Expires June 10, 2016                 [Page 8]
+Dickinson, et al.         Expires June 17, 2016                 [Page 8]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                DNS over TCP                 December 2015
 
 
 
-Dickinson, et al.         Expires June 10, 2016                 [Page 9]
+Dickinson, et al.         Expires June 17, 2016                 [Page 9]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -538,26 +538,26 @@ Internet-Draft                DNS over TCP                 December 2015
 
 8.  TCP Message Length Field
 
-   For reasons of efficiency, DNS clients and servers SHOULD pass the
-   two-octet length field, and the message described by that length
-   field, to the TCP layer at the same time (e.g., in a single "write"
-   system call) to make it more likely that all the data will be
-   transmitted in a single TCP segment.
+   DNS clients and servers SHOULD pass the two-octet length field, and
+   the message described by that length field, to the TCP layer at the
+   same time (e.g., in a single "write" system call) to make it more
+   likely that all the data will be transmitted in a single TCP segment.
+   This is both for reasons of efficiency and to avoid problems due to
+   some DNS server implementations behaving undesirably when processing
+   TCP segments (due to a lack of clarity in previous standards).  For
+   example, some DNS server implementations might abort a TCP session if
+   the first TCP segment does not contain both the length field and the
+   entire message.
 
-   This additionally avoids problems due to some DNS servers being very
-   sensitive to timeout conditions on receiving messages (they might
-   abort a TCP session if the first TCP segment does not contain both
-   the length field and the entire message).  Such behavior is certainly
-   undesirable.  As described in Section 6.2.3, servers SHOULD apply
-   connection timeouts to the receipt of a full message and MUST NOT
-   close a connection simply because the first "read" from the TCP layer
-   does not contain the entire message.
-
-
-
+   To clarify, DNS servers MUST NOT close a connection simply because
+   the first "read" from the TCP layer does not contain the entire DNS
+   message, and servers SHOULD apply the connection timeouts as
+   specified in Section 6.2.3.
 
 
-Dickinson, et al.         Expires June 10, 2016                [Page 10]
+
+
+Dickinson, et al.         Expires June 17, 2016                [Page 10]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                DNS over TCP                 December 2015
 
 
 
-Dickinson, et al.         Expires June 10, 2016                [Page 11]
+Dickinson, et al.         Expires June 17, 2016                [Page 11]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -669,7 +669,7 @@ Internet-Draft                DNS over TCP                 December 2015
 
 
 
-Dickinson, et al.         Expires June 10, 2016                [Page 12]
+Dickinson, et al.         Expires June 17, 2016                [Page 12]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -725,7 +725,7 @@ Internet-Draft                DNS over TCP                 December 2015
 
 
 
-Dickinson, et al.         Expires June 10, 2016                [Page 13]
+Dickinson, et al.         Expires June 17, 2016                [Page 13]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -781,7 +781,7 @@ Internet-Draft                DNS over TCP                 December 2015
 
 
 
-Dickinson, et al.         Expires June 10, 2016                [Page 14]
+Dickinson, et al.         Expires June 17, 2016                [Page 14]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -837,7 +837,7 @@ Appendix A.  Summary of Advantages and Disadvantages to using TCP for
 
 
 
-Dickinson, et al.         Expires June 10, 2016                [Page 15]
+Dickinson, et al.         Expires June 17, 2016                [Page 15]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -893,7 +893,7 @@ B.2.  Changes -02 to -03
 
 
 
-Dickinson, et al.         Expires June 10, 2016                [Page 16]
+Dickinson, et al.         Expires June 17, 2016                [Page 16]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -949,7 +949,7 @@ B.4.  Changes -00 to -01
 
 
 
-Dickinson, et al.         Expires June 10, 2016                [Page 17]
+Dickinson, et al.         Expires June 17, 2016                [Page 17]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -1005,7 +1005,7 @@ Appendix C.  Changes to RFC5966
 
 
 
-Dickinson, et al.         Expires June 10, 2016                [Page 18]
+Dickinson, et al.         Expires June 17, 2016                [Page 18]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -1061,7 +1061,7 @@ Authors' Addresses
 
 
 
-Dickinson, et al.         Expires June 10, 2016                [Page 19]
+Dickinson, et al.         Expires June 17, 2016                [Page 19]
 
 Internet-Draft                DNS over TCP                 December 2015
 
@@ -1117,4 +1117,4 @@ Internet-Draft                DNS over TCP                 December 2015
 
 
 
-Dickinson, et al.         Expires June 10, 2016                [Page 20]
+Dickinson, et al.         Expires June 17, 2016                [Page 20]

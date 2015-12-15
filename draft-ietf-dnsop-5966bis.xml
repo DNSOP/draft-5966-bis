@@ -164,7 +164,8 @@ please see http://xml.resource.org/authoring/README.html. -->
             <t> This document specifies the requirement for support of TCP as a
                 transport protocol for DNS implementations and provides
                 guidelines towards DNS-over-TCP performance on par with that
-                of DNS-over-UDP. This document obsoletes RFC5966.</t>
+                of DNS-over-UDP. This document obsoletes RFC5966
+                and therefore updates RFC1035 and RFC1123.</t>
         </abstract>
     </front>
     <middle>
@@ -413,7 +414,7 @@ please see http://xml.resource.org/authoring/README.html. -->
                         <t> DNS servers (especially recursive) SHOULD expect to receive
                             pipelined queries.  The server SHOULD process TCP queries concurrently,
                             just as it would for UDP.  The server SHOULD answer all pipelined 
-                            queries, even if they are sent in quick succession. The handling of
+                            queries, even if they are received in quick succession. The handling of
                             responses to pipelined queries is covered in 
                             <xref target="re-ordering"/>.</t>
                     </section>
@@ -511,18 +512,20 @@ please see http://xml.resource.org/authoring/README.html. -->
         </section>
 
         <section title="TCP Message Length Field" anchor="messagelength">
-            <t> For reasons of efficiency, DNS clients and servers SHOULD pass the two-octet length
+            <t> DNS clients and servers SHOULD pass the two-octet length
                 field, and the message described by that length field, to the TCP layer at the same
                 time (e.g., in a single "write" system call) to make it more likely that all the
-                data will be transmitted in a single TCP segment.</t>
+                data will be transmitted in a single TCP segment. This is both for reasons of 
+                efficiency and to avoid problems due to some DNS server implementations 
+                behaving undesirably when processing TCP segments (due to a lack of clarity 
+                in previous standards). For example, some DNS server implementations
+                might abort a TCP session if the first TCP segment does not
+                contain both the length field and the entire message.</t>
 
-            <t> This additionally avoids problems due
-                to some DNS servers being very sensitive to timeout conditions on receiving messages 
-                (they might abort a TCP session if the first TCP segment does not contain both
-                the length field and the entire message). Such behavior is certainly undesirable.
-                As described in <xref target="idle"/>, servers SHOULD apply
-                connection timeouts to the receipt of a full message and MUST NOT close a connection
-                simply because the first "read" from the TCP layer does not contain the entire message.</t>
+            <t> To clarify, DNS servers MUST NOT close a connection simply because 
+                the first "read" from the TCP layer does not contain the entire 
+                DNS message, and servers SHOULD apply the connection timeouts as 
+                specified in <xref target="idle"/>.</t>
         </section>
 
         <section title="TCP Fast Open" anchor="fastopen">
