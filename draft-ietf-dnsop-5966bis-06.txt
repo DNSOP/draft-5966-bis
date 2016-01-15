@@ -7,10 +7,10 @@ Internet-Draft                                              S. Dickinson
 Obsoletes: 5966 (if approved)                                    Sinodun
 Updates: 1035,1123 (if approved)                               R. Bellis
 Intended status: Standards Track                                     ISC
-Expires: July 14, 2016                                         A. Mankin
+Expires: July 18, 2016                                         A. Mankin
                                                               D. Wessels
                                                            Verisign Labs
-                                                        January 11, 2016
+                                                        January 15, 2016
 
 
           DNS Transport over TCP - Implementation Requirements
@@ -39,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 14, 2016.
+   This Internet-Draft will expire on July 18, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Dickinson, et al.         Expires July 14, 2016                 [Page 1]
+Dickinson, et al.         Expires July 18, 2016                 [Page 1]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Dickinson, et al.         Expires July 14, 2016                 [Page 2]
+Dickinson, et al.         Expires July 18, 2016                 [Page 2]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -165,7 +165,7 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                 [Page 3]
+Dickinson, et al.         Expires July 18, 2016                 [Page 3]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -221,7 +221,7 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                 [Page 4]
+Dickinson, et al.         Expires July 18, 2016                 [Page 4]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -277,7 +277,7 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                 [Page 5]
+Dickinson, et al.         Expires July 18, 2016                 [Page 5]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -333,7 +333,7 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                 [Page 6]
+Dickinson, et al.         Expires July 18, 2016                 [Page 6]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -389,7 +389,7 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                 [Page 7]
+Dickinson, et al.         Expires July 18, 2016                 [Page 7]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -445,7 +445,7 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                 [Page 8]
+Dickinson, et al.         Expires July 18, 2016                 [Page 8]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -501,7 +501,7 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                 [Page 9]
+Dickinson, et al.         Expires July 18, 2016                 [Page 9]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -557,7 +557,7 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                [Page 10]
+Dickinson, et al.         Expires July 18, 2016                [Page 10]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -591,11 +591,6 @@ Internet-Draft                DNS over TCP                  January 2016
    if either the client or server processes are restarted.  TFO also
    falls back to a regular TCP handshake gracefully.
 
-   Implementers should be aware that if a DNS privacy mechanism is being
-   used then there are significant dangers in mixing unprotected query
-   or response data (from TFO) with protected data.  See [DNS-over-TLS]
-   for the proper way to handle this situation.
-
    DNS services taking advantage of IP anycast [RFC4786] might need to
    take additional steps when enabling TFO.  From [RFC7413]:
 
@@ -606,6 +601,11 @@ Internet-Draft                DNS over TCP                  January 2016
       client may get different cookies across connections; its Fast Open
       attempts would fall back to regular 3WHS.
 
+   When DNS-over-TCP is a transport for DNS private exchange, as in
+   [DNS-over-TLS], the implementor needs to be aware of TFO and to
+   ensure that data requiring protection (e.g. data for a DNS query) is
+   not accidentally transported in the clear.  See [DNS-over-TLS] for
+   discussion."
 
 
 
@@ -613,7 +613,7 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                [Page 11]
+Dickinson, et al.         Expires July 18, 2016                [Page 11]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -669,7 +669,7 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                [Page 12]
+Dickinson, et al.         Expires July 18, 2016                [Page 12]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -725,7 +725,7 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                [Page 13]
+Dickinson, et al.         Expires July 18, 2016                [Page 13]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -781,7 +781,7 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                [Page 14]
+Dickinson, et al.         Expires July 18, 2016                [Page 14]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -837,7 +837,7 @@ Appendix A.  Summary of Advantages and Disadvantages to using TCP for
 
 
 
-Dickinson, et al.         Expires July 14, 2016                [Page 15]
+Dickinson, et al.         Expires July 18, 2016                [Page 15]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -893,7 +893,7 @@ B.1.  Changes -05 to -06
 
 
 
-Dickinson, et al.         Expires July 14, 2016                [Page 16]
+Dickinson, et al.         Expires July 18, 2016                [Page 16]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -949,7 +949,7 @@ B.3.  Changes -03 to -04
 
 
 
-Dickinson, et al.         Expires July 14, 2016                [Page 17]
+Dickinson, et al.         Expires July 18, 2016                [Page 17]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -1005,7 +1005,7 @@ B.5.  Changes -01 to -02
 
 
 
-Dickinson, et al.         Expires July 14, 2016                [Page 18]
+Dickinson, et al.         Expires July 18, 2016                [Page 18]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -1061,7 +1061,7 @@ Appendix C.  Changes to RFC5966
 
 
 
-Dickinson, et al.         Expires July 14, 2016                [Page 19]
+Dickinson, et al.         Expires July 18, 2016                [Page 19]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -1117,7 +1117,7 @@ Authors' Addresses
 
 
 
-Dickinson, et al.         Expires July 14, 2016                [Page 20]
+Dickinson, et al.         Expires July 18, 2016                [Page 20]
 
 Internet-Draft                DNS over TCP                  January 2016
 
@@ -1173,4 +1173,4 @@ Internet-Draft                DNS over TCP                  January 2016
 
 
 
-Dickinson, et al.         Expires July 14, 2016                [Page 21]
+Dickinson, et al.         Expires July 18, 2016                [Page 21]

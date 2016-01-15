@@ -552,11 +552,6 @@ please see http://xml.resource.org/authoring/README.html. -->
                 client or server processes are restarted.  TFO also falls back to a regular TCP
                 handshake gracefully.</t>
 
-            <t> Implementers should be aware that if a DNS privacy mechanism is
-                being used then there are significant dangers in mixing unprotected
-                query or response data (from TFO) with protected data. See <xref target="DNS-over-TLS"/>
-                for the proper way to handle this situation.</t>
-
             <t> DNS services taking advantage of IP anycast <xref target="RFC4786"/> might need to
                 take additional steps when enabling TFO. From <xref target="RFC7413"> </xref>:
                 <list><t><vspace/>Servers that accept connection requests to the same server IP
@@ -564,6 +559,13 @@ please see http://xml.resource.org/authoring/README.html. -->
                     Cookies for a particular client IP address. Otherwise a client may get different
                     cookies across connections; its Fast Open attempts would fall back to regular
                     3WHS. </t></list></t>
+
+            <t> When DNS-over-TCP is a transport for DNS private exchange, as in
+                    <xref target="DNS-over-TLS"/>, the implementor needs to be aware of TFO and to ensure
+                    that data requiring protection (e.g. data for a DNS query) is not accidentally
+                    transported in the clear. See <xref target="DNS-over-TLS"/> for discussion.”
+            </t>
+
         </section>
 
         <section anchor="IANA" title="IANA Considerations">
